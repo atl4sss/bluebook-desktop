@@ -1,0 +1,89 @@
+{
+  "sectionTitle": "Section 1, Module 1: Reading & Writing",
+  "timeMinutes": 32,
+  "directions": "Answer each question based on the text or data provided.",
+  "questions": [
+    {
+      "stimulus": "Bamboo grows so rapidly that a single culm can lengthen by almost a meter in 24 hours. This extraordinary rate has prompted architects to explore bamboo as a renewable building material.",
+      "text": "Which choice most effectively combines the two sentences?",
+      "options": [
+        "Because it can grow almost a meter in 24 hours, architects are prompted by bamboo's extraordinarily rapid growth to explore it as a renewable building material.",
+        "Prompted by bamboo's ability to lengthen almost a meter in 24 hours, architects are exploring the rapidly growing plant as a renewable building material.",
+        "Bamboo grows rapidly, and architects are exploring it as a renewable building material because of this extraordinarily rapid growth rate of nearly a meter in 24 hours.",
+        "Growing as much as a meter in 24 hours, bamboo is extraordinary, this rate prompting architects to explore it as a renewable building material."
+      ],
+      "answer": 1
+    },
+
+    {
+      "stimulus": "In an effort to ____ the impact of invasive lionfish on native reef species, Caribbean communities have organized annual spearfishing derbies.",
+      "text": "Which choice completes the sentence with the most logical and precise word?",
+      "options": ["exacerbate", "mitigate", "forecast", "advertise"],
+      "answer": 1
+    },
+
+    {
+      "stimulus": "Studies show that people are more likely to recycle when the bins are placed in convenient, high-traffic areas. Municipalities hoping to increase recycling rates should therefore ____.",
+      "text": "Which choice most logically completes the argument?",
+      "options": [
+        "increase the price of trash collection services",
+        "require households to keep multiple recycling bins",
+        "position recycling receptacles where residents already congregate",
+        "fine residents who place recyclables in regular trash bins"
+      ],
+      "answer": 2
+    },
+
+    {
+      "stimulus": "The novelist grew up in a bilingual household, a background that profoundly shaped her narrative voice.",
+      "text": "Which choice best conveys the meaning of the sentence in a single, concise sentence?",
+      "options": [
+        "Growing up in a household where two languages were spoken, the novelist's narrative voice was profoundly shaped.",
+        "Growing up bilingual profoundly shaped the novelist’s narrative voice.",
+        "Because the novelist grew up speaking two languages in her household, her narrative voice was profoundly shaped.",
+        "The narrative voice of the novelist was shaped profoundly because of her household that spoke two languages."
+      ],
+      "answer": 1
+    },
+
+    {
+      "stimulus": "Data from a national survey indicate that 62 % of adults prefer text messages to phone calls for routine communication.",
+      "text": "Which interpretation of the data is most accurate?",
+      "options": [
+        "Most adults surveyed favor texting over phone calls in everyday situations.",
+        "Nearly two-thirds of all adults never use phone calls.",
+        "Only 38 % of surveyed adults use text messages at all.",
+        "Adults universally communicate by text messages for every circumstance."
+      ],
+      "answer": 0
+    },
+
+
+    {"stimulus":"Helium is the only element that was first discovered in space rather than on Earth.","text":"Which revision of the underlined portion is most precise?","options":["in the vacuum of space","outside Earth’s atmosphere","in outer realm","in sky"],"answer":1},
+    {"stimulus":"A recent analysis of rainfall patterns shows that extreme precipitation events have become ___ frequent over the past 50 years.","text":"Which choice completes the sentence?","options":["less","least","few","fewer"],"answer":0},
+    {"stimulus":"Some historians argue that the Silk Road was not a single route but a complex network of intersecting trails.","text":"Which choice adds the most relevant supporting detail?","options":["The trails covered roughly 7 000 km.","Caravans often included camels.","Spices and silk were popular goods.","These trails shifted as political borders changed."],"answer":3},
+    {"stimulus":"Graph shows pizza sales by day: Mon 50, Tue 75, Wed 60, Thu 80, Fri 120.","text":"On which day were pizza sales 20 % higher than Wednesday?","options":["Monday","Tuesday","Thursday","Friday"],"answer":2},
+    {"stimulus":"Underlined: **their** in “Every fox returned to their den before dawn.”","text":"Which revision ensures pronoun-antecedent agreement?","options":["its","his or her","his","her"],"answer":0},
+    {"stimulus":"Meteorologists use the term \"atmospheric river\" to describe a narrow band of concentrated water vapor that can deliver intense rainfall.","text":"Which choice most clearly defines “atmospheric river”?","options":["a new phrase for any river that is in the sky","a narrow corridor of high-moisture air capable of producing heavy rain","clouds that look like rivers from satellite images","storms that always cause flooding"],"answer":1},
+    {"stimulus":"The committee reached a consensus quickly; the proposal, ___ had seemed controversial at first, was ultimately approved unanimously.","text":"","options":["which","that","who","whom"],"answer":0},
+    {"stimulus":"A study of 1 200 drivers found that those who listened to upbeat music tended to drive faster than those who listened to slower music.","text":"Which inference is best supported?","options":["Music tempo may influence driving speed.","Fast drivers prefer rock music.","Slow music makes everyone drive poorly.","The study proves music causes accidents."],"answer":0},
+    {"stimulus":"Researchers tested three fertilizers on tomato yield.","table":[["Fertilizer","Avg kg per plant"],["None",2.1],["A",3.4],["B",3.6],["C",2.9]],"text":"Which fertilizer increased yield the most relative to no fertilizer?","options":["A","B","C","all equal"],"answer":1},
+    {"stimulus":"Underlined: **less** in “Fewer traffic signals means less delays for commuters.”","text":"Which revision corrects the error?","options":["fewer delays","least delays","little delays","lesser delays"],"answer":0},
+    {"stimulus":"The term “CRISPR” refers to a powerful gene-editing technology, ___ potential applications range from agriculture to medicine.","text":"","options":["whose","who’s","which","that’s"],"answer":0},
+    {"stimulus":"Bird migration patterns have shifted northward by an average of 50 km over the past three decades.","text":"Which factor would most strengthen the claim that climate change caused this shift?","options":["Many studied species rely on temperature-dependent food sources.","Birds can fly long distances.","Some regions built more cell towers.","Birdwatchers improved optics."],"answer":0},
+    {"stimulus":"A museum curator wants to display artifacts chronologically but only has space for one-quarter of the collection. Which data display would best help decide which items to show?","text":"","options":["scatter plot","dot-plot of artifact dates","pie chart of item materials","bar graph of item sizes"],"answer":1},
+    {"stimulus":"Cheetahs accelerate faster than any other land mammal.","text":"Which revision adds the most relevant supporting evidence?","options":["They live in Africa.","Their claws are non-retractable, providing traction.","They have distinctive spots.","They are admired by tourists."],"answer":1},
+    {"stimulus":"“I have a dream that one day this nation will rise up,” King said, employing ____ to emphasize his vision.","text":"","options":["anaphora","metaphor","paradox","alliteration"],"answer":0},
+    {"stimulus":"Underlined: **are** in “Either the students or the teacher are responsible for locking the lab.”","text":"Which revision corrects subject-verb agreement?","options":["is","has been","have been","were"],"answer":0},
+    {"stimulus":"The chart shows global smartphone users: 2015 = 2.6 B, 2020 = 3.8 B, 2025 (projected) = 4.7 B.","text":"Approximately what percent increase is projected from 2020 to 2025?","options":["5 %","15 %","24 %","35 %"],"answer":2},
+    {"stimulus":"Some bacteria form endospores, allowing them to survive extreme heat, desiccation, and radiation.","text":"Which choice best explains how endospore formation benefits bacteria?","options":["It enables dormancy under hostile conditions.","It accelerates reproduction.","It increases mutation rate.","It changes their genus."],"answer":0},
+    {"stimulus":"Underlined: **effect** in “The new policy will effect higher parking fees.”","text":"Which revision is correct?","options":["affect","effectuate","effects","will affect"],"answer":0},
+    {"stimulus":"Scientists recorded the pH of three lakes: Lake A 6.8, Lake B 7.4, Lake C 5.9.","text":"Which lake is most acidic?","options":["A","B","C","all equal"],"answer":2},
+    {"stimulus":"The poet employs an extended metaphor comparing hope to a bird that ‘perches in the soul.’","text":"Which technique is used?","options":["simile","allusion","metaphor","hyperbole"],"answer":2},
+    {"stimulus":"Underlined: **less** in “Fewer stars are visible in urban areas because there is less lights.”","text":"Which revision corrects the error?","options":["fewer lights","lesser lights","few lights","little lights"],"answer":0},
+    {"stimulus":"A company tested two ad campaigns and found a 12 % click-through rate (CTR) for Ad A and 15 % for Ad B, p < 0.01.","text":"Which is the most accurate conclusion?","options":["Ad B performs significantly better than Ad A.","Ad A performs significantly better.","The ads perform the same.","The difference is due to chance."],"answer":0},
+    {"stimulus":"Underlined: **which** in “The committee discussed the proposal, which they will vote tomorrow.”","text":"Which revision corrects the sentence?","options":["on which","they will vote on which","vote about it","for which"],"answer":0},
+    {"stimulus":"A biologist noted that plant X grew 30 % faster under blue light than red light.","text":"Which hypothesis is best supported?","options":["Blue wavelengths stimulate photosynthesis more effectively for plant X.","Red light harms plant X.","Green light would double growth.","Soil nutrients caused the difference."],"answer":0},
+    {"stimulus":"Underlined: **theirselves**","text":"Which replacement is correct?","options":["themselves","themself","theirself","their selves"],"answer":0}
+  ]
+}

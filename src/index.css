@@ -1,0 +1,84 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* ====== custom fonts ====== */
+@font-face {
+  font-family: "Minion Pro";
+  src: url("/fonts/MinionPro-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Myriad Pro";
+  src: url("/fonts/MyriadPro-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* (оставьте здесь остальные стили App.css / index.css – логотипы, анимации …) */
+
+:root {
+  color-scheme: light;
+  --font-ui: "Myriad Pro", Arial, sans-serif;
+  --font-question: "Minion Pro", Georgia, serif;
+  /* Only regular font files ship with the original; synthesize emphasis. */
+  font-synthesis: weight style;
+  font-family: var(--font-ui);
+}
+body {
+  margin: 0;
+  min-width: 360px;
+}
+.kiosk-error {
+  position: fixed;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  max-width: calc(100vw - 32px);
+  padding: 12px 18px;
+  background: #fff;
+  color: #8f2020;
+  border: 1px solid #8f2020;
+  border-radius: 6px;
+}
+button,
+input,
+textarea {
+  font: inherit;
+}
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+a:focus-visible {
+  outline: 2px solid #1e40af;
+  outline-offset: 3px;
+}
+button:disabled {
+  cursor: not-allowed;
+}
+.app-modal {
+  width: min(560px, calc(100vw - 40px));
+  max-height: calc(100dvh - 48px);
+  overflow: auto;
+  border: 1px solid #bcc3c9;
+  border-radius: 8px;
+  padding: 24px;
+  color: #17212f;
+  background: white;
+}
+.app-modal::backdrop {
+  background: rgb(0 0 0 / 35%);
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    scroll-behavior: auto !important;
+    transition: none !important;
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "SAT Practice",
+  "version": "../package.json",
+  "identifier": "com.atl4sss.satpractice",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build",
+    "devUrl": "http://127.0.0.1:5173",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "SAT Practice",
+        "width": 1366,
+        "height": 768,
+        "minWidth": 1024,
+        "minHeight": 640,
+        "center": true,
+        "resizable": false,
+        "fullscreen": true,
+        "decorations": false,
+        "minimizable": false,
+        "maximizable": false,
+        "closable": false,
+        "alwaysOnTop": true
+      }
+    ],
+    "security": {
+      "capabilities": ["main"],
+      "csp": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data:; connect-src 'self' ipc: http://ipc.localhost https://firestore.googleapis.com; object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'self'",
+      "devCsp": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data:; connect-src 'self' ipc: http://ipc.localhost ws://127.0.0.1:5173 http://127.0.0.1:8080 https://firestore.googleapis.com; object-src 'none'; frame-src 'none'"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "shortDescription": "SAT practice tests",
+    "category": "Education",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "macOS": { "minimumSystemVersion": "12.0" },
+    "windows": { "nsis": { "installMode": "currentUser" } }
+  }
+}

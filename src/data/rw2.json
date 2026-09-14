@@ -1,0 +1,65 @@
+{
+  "sectionTitle": "Section 1, Module 2: Reading & Writing",
+  "timeMinutes": 32,
+  "directions": "Answer each question based on the text or information provided.",
+  "questions": [
+    {
+      "title": "Renewable-Energy Jobs in Selected Countries, 2023",
+      "table": [
+        ["Country","Solar","Wind","Biofuel"],
+        ["Brazil","95 000","18 000","283 000"],
+        ["Germany","65 000","121 000","48 000"],
+        ["India","280 000","41 000","46 000"],
+        ["Kenya","10 000","7 000","13 000"]
+      ],
+      "stimulus": "Based on the table, which country likely has the greatest need for wind-turbine technicians?",
+      "text": "Which choice completes the statement?",
+      "options": [
+        "Brazil, because it has the highest solar employment.",
+        "Germany, because it has the highest wind employment.",
+        "India, because it has the highest solar employment.",
+        "Kenya, because its wind and biofuel employment are similar."
+      ],
+      "answer": 1
+    },
+
+    {
+      "stimulus": "The research team was surprised when normally timid birds began nesting near hiking trails after a strict no-feed policy was enacted. **This behavior suggests that human food had discouraged the birds from areas they otherwise preferred.**",
+      "text": "Which choice best revises the underlined sentence to be most precise?",
+      "options": [
+        "This behavior suggests that easily available human food kept the birds away from nesting areas they otherwise preferred.",
+        "This behavior shows that birds dislike hikers in general.",
+        "This behavior means the birds prefer noise.",
+        "This behavior implies the birds had no nesting preference before."
+      ],
+      "answer": 0
+    },
+
+
+    {"stimulus":"A linguist studying endangered languages documented a verb tense used only when recounting dreams.","text":"Which inference is best supported?","options":["The community distinguishes dream events from waking events.","The community rarely dreams.","Dreams influence grammar universally.","The language has no past tense."],"answer":0},
+    {"stimulus":"Underlined: **less** in “There are less opportunities for remote work in that field.”","text":"Which replacement corrects the error?","options":["fewer","few","least","littler"],"answer":0},
+    {"stimulus":"A graph shows elliptical galaxy counts vs. spiral galaxies; spirals outnumber ellipticals 3 to 1.","text":"Which conclusion is supported?","options":["Spiral galaxies are more common in the sample.","Ellipticals have more stars.","Ellipticals rotate faster.","Spirals are older."],"answer":0},
+    {"stimulus":"Scientists discovered bacteria that metabolize plastic at room temperature, a capability that could transform recycling.","text":"Which choice adds the most relevant detail?","options":["The bacteria were isolated from a landfill leachate sample.","Some bacteria are rod-shaped.","Plastic pollutes oceans.","Room temperature is about 20 °C."],"answer":0},
+    {"stimulus":"Underlined: **who** in “A committee who meets quarterly will review the report.”","text":"Which revision is correct?","options":["that","which","whom","– (no change)"],"answer":0},
+    {"stimulus":"“We suspect the lunar magma ocean crystallized in layers,” geologists said.","text":"Which rhetorical device is used?","options":["analogy","alliteration","hypothesis","paradox"],"answer":2},
+    {"stimulus":"pH values of three liquids: Coffee 5.0, Milk 6.6, Water 7.0","text":"Which liquid is most acidic?","options":["Coffee","Milk","Water","All equal"],"answer":0},
+    {"stimulus":"Underlined: **are** in “Neither the players nor the coach are planning to speak.”","text":"Which verb agrees?","options":["is","were","have been","are"],"answer":0},
+    {"stimulus":"A tech firm compared two UI layouts and found a statistically significant 18 % reduction in task time for Layout B (p < 0.01).","text":"Which conclusion is most accurate?","options":["Layout B allows users to complete tasks faster than Layout A.","Layout A is faster.","Both layouts are equally fast.","The difference is random."],"answer":0},
+    {"stimulus":"Mars missions must account for the planet’s average temperature of −63 °C, which can plunge to −125 °C at night at the poles.","text":"Which revision most effectively combines the sentence parts?","options":["Mars missions must account for the planet’s average temperature of −63 °C, which can plunge to −125 °C at night at the poles.","Mars missions must account for the planet’s average temperature that can plunge to −125 °C at night.","Because Mars can plunge to −125 °C at night at the poles, missions must account for its average temperature of −63 °C.","Missions must account for Mars’s temperature: its average is −63 °C, yet nighttime polar lows can reach −125 °C."],"answer":3},
+    {"stimulus":"A biochemist measured enzyme activity at 15 °C intervals from 15 °C to 75 °C and observed peak activity at 45 °C.","text":"Which inference is best supported?","options":["The enzyme’s optimum temperature is 45 °C.","Activity increases indefinitely beyond 75 °C.","15 °C is lethal.","The enzyme denatures at all temperatures."],"answer":0},
+    {"stimulus":"Underlined: **lesser** in “He is the lesser of the two siblings in height.”","text":"Which alternative is most idiomatic?","options":["shorter","least","little","more shorter"],"answer":0},
+    {"stimulus":"A chart shows the percentage of electric-vehicle sales: 2020 = 4 %, 2021 = 6 %, 2022 = 9 %.","text":"What is the approximate compound annual growth rate (CAGR) from 2020 to 2022?","options":["≈25 %","≈44 %","≈83 %","≈125 %"],"answer":1},
+    {"stimulus":"Underlined: **it’s** in “The planet completes it’s orbit every 88 days.”","text":"Which replacement is correct?","options":["its","its’","it is","they’re"],"answer":0},
+    {"stimulus":"A sociologist surveyed 2 000 respondents and found a correlation (r = 0.62) between weekly exercise hours and reported happiness scores.","text":"Which statement interprets the correlation?","options":["Greater exercise tends to be associated with higher happiness in this sample.","Exercise causes happiness in all cases.","There is no relationship between exercise and happiness.","Happiness causes people to avoid exercise."],"answer":0},
+    {"stimulus":"Underlined: **amount** in “The amount of students in the program doubled.”","text":"Which correction maintains proper diction?","options":["number","quantity","much","sum"],"answer":0},
+    {"stimulus":"A historian notes that printing presses spread through Europe within 50 years of Gutenberg’s 1450 invention.","text":"Which factor would most strengthen the claim that economic demand drove the spread?","options":["Regions with higher literacy adopted presses earlier.","Some presses were decorative.","Paper was expensive.","Monasteries opposed printing."],"answer":0},
+    {"stimulus":"Underlined: **being that** in “Being that she was late, the meeting started without her.”","text":"Which revision is most concise?","options":["Because she was late","Due to the fact she was late","For her lateness","In light of her lateness"],"answer":0},
+    {"stimulus":"Scientists detected methane spikes on Mars but measurements were inconsistent.","text":"Which hypothesis best explains the inconsistency?","options":["Methane release is intermittent.","Instruments malfunctioned every day.","Earth-based radio noise masked data.","Mars has no methane at all."],"answer":0},
+    {"stimulus":"Underlined: **could of**","text":"Which replacement corrects the error?","options":["could have","could off","could’ve","could had"],"answer":0},
+    {"stimulus":"A graph shows linear growth of a plant: Day 0 → 4 cm, Day 10 → 9 cm.","text":"Assuming constant growth, what is the daily rate?","options":["0.25 cm","0.5 cm","1 cm","2 cm"],"answer":1},
+    {"stimulus":"Researchers found that honey bees can comprehend the concept of zero in numerical tests.","text":"Which interpretation is best?","options":["Honey bees have rudimentary numerical cognition comparable to some vertebrates.","Honey bees can perform complex arithmetic.","All insects understand zero.","Zero is irrelevant to bee behavior."],"answer":0},
+    {"stimulus":"Underlined: **who** in “The data who were collected show a rise.”","text":"Which replacement is correct?","options":["that","which","what","where"],"answer":0},
+    {"stimulus":"A table lists average commute times: City A — 31 min, City B — 42 min, City C — 27 min.","text":"Which city has the median commute time?","options":["A","B","C","All equal"],"answer":0},
+    {"stimulus":"Underlined: **there** in “Their going to present the report tomorrow.”","text":"Which correction is needed?","options":["They’re","There’re","Thier","No change"],"answer":0}
+  ]
+}

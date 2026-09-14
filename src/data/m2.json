@@ -1,0 +1,29 @@
+{
+  "sectionTitle": "Section 2, Module 2: Math",
+  "timeMinutes": 35,
+  "directions": "Calculator permitted.",
+  "questions": [
+    { "stimulus": "Graph of y = ax² + bx + c passes (−2,0), (1,0), (0,4). Find c.", "options": ["−8", "4", "6", "8"], "answer": 1 },
+    { "stimulus": "Solve 5^x = 125.", "options": ["2", "3", "4", "5"], "answer": 1 },
+    { "stimulus": "What is the area of a triangle with base 10 cm and height 7 cm?", "options": ["35 cm²", "70 cm²", "17.5 cm²", "140 cm²"], "answer": 0 },
+    { "stimulus": "If 4(k − 2) = 2k + 6, find k.", "options": ["1", "2", "3", "4"], "answer": 2 },
+    { "stimulus": "Line p is parallel to line q. Slope of p is 3/4. What is slope of q?", "options": ["3/4", "−3/4", "4/3", "−4/3"], "answer": 0 },
+    { "stimulus": "A cylinder has volume 100π and height 4. Find radius.", "options": ["5", " √(25)", "√(25/2)", "√(100)"], "answer": 0 },
+    { "stimulus": "Convert 0.075 as a percent.", "options": ["0.75 %", "7.5 %", "75 %", "750 %"], "answer": 1 },
+    { "stimulus": "The function p(n) = n(n − 1)/2 counts handshakes among n people. How many handshakes for n = 10 ?", "options": ["45", "90", "10", "55"], "answer": 0 },
+    { "stimulus": "Simplify (3x⁻²y³)/(6x⁻¹y).", "options": ["(1/2)x⁻¹y²", "(1/2)x³y²", "(1/2)x⁻¹y⁴", "(1/2)x y²"], "answer": 0 },
+    { "stimulus": "What is the solution set of x² − 9 = 0 ?", "options": ["{3}", "{−3}", "{−3, 3}", "∅"], "answer": 2 },
+    { "stimulus": "In the figure, ∠ABC is an exterior angle of triangle XYZ, and m∠XYZ = 40°, m∠YXZ = 60°. Find m∠ABC.", "options": ["40°", "60°", "100°", "120°"], "answer": 2 },
+    { "stimulus": "An arithmetic sequence has first term 5 and common difference 4. What is the 15th term?", "options": ["59", "61", "63", "65"], "answer": 1 },
+    { "stimulus": "Solve for y: (y + 3)/5 = 7.", "options": ["32", "35", "37", "38"], "answer": 3 },
+    { "stimulus": "A laptop originally priced $1 200 is on sale for 15 % off. What is the sale price?", "options": ["$1 020", "$1 050", "$960", "$1 140"], "answer": 0 },
+    { "stimulus": "Find the y-coordinate of vertex of y = 2(x − 3)² + 4.", "options": ["4", "2", "−3", "3"], "answer": 0 },
+    { "stimulus": "Which is equivalent to (x + 5)² ?", "options": ["x² + 25", "x² + 10x + 25", "x² + 10 + 25", "x² − 10x + 25"], "answer": 1 },
+    { "stimulus": "A right triangle has legs 9 cm and 12 cm. What is the hypotenuse?", "options": ["15 cm", "18 cm", "21 cm", "24 cm"], "answer": 0 },
+    { "stimulus": "If f(x) = x³ and g(x) = √x, what is f(g(16)) ?", "options": ["4", "8", "64", "512"], "answer": 2 },
+    { "stimulus": "Solve 2/3 = (x + 1)/9.", "options": ["5", "6", "7", "8"], "answer": 1 },
+    { "stimulus": "Which graph represents y = −2x + 3 ?", "options": ["line slope 2, y-int 3","line slope −2, y-int 3","line slope −2, y-int −3","line slope 3, y-int −2"], "answer": 1 },
+    { "stimulus": "Find x if log₁₀(x) = 2.5.", "options": ["250", "316", "100", "1 000"], "answer": 1 },
+    { "stimulus": "What is the value of 7! / (5!·2!) ?", "options": ["7", "21", "42", "252"], "answer": 2 }
+  ]
+}

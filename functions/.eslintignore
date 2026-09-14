@@ -1,0 +1,10 @@
+# служебные конфиги
+tailwind.config.js
+functions/.eslintrc.js
+
+# серверные функции и их билд-артефакты
+functions/**
+!functions/index.js   # если всё же хочешь линтить index.js — удали эту строку
+
+# старый дубликат функций в src (лучше удалить папку)
+src/functions/**

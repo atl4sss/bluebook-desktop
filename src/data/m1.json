@@ -1,0 +1,29 @@
+{
+  "sectionTitle": "Section 2, Module 1: Math",
+  "timeMinutes": 35,
+  "directions": "Calculator permitted.",
+  "questions": [
+    { "stimulus": "3x − 7 = 11", "text": "What is x ?", "options": ["4", "6", "9", "18"], "answer": 1 },
+    { "stimulus": "f(t) = 2t² − 5t + 3. Find f(−2).", "options": ["17", "9", "1", "−7"], "answer": 0 },
+    { "stimulus": "If 4y + 2 = 6y − 10, what is y ?", "options": ["6", "−6", "4", "−4"], "answer": 3 },
+    { "stimulus": "The line y = 3x + b passes through (2, 1). Find b.", "options": ["−5", "−7", "−1", "−9"], "answer": 0 },
+    { "stimulus": "Which is equivalent to (x + 4)(x − 2) ?", "options": ["x² + 2x − 8", "x² + 6x − 8", "x² + 2x + 8", "x² − 2x − 8"], "answer": 0 },
+    { "stimulus": "In the figure, ∠A = 35°, ∠B = 60°. Find ∠C.", "options": ["85°", "95°", "105°", "115°"], "answer": 1 },
+    { "stimulus": "A cylinder has radius 3 cm and height 5 cm. What is its volume? (Use π.)", "options": ["15π", "30π", "45π", "135π"], "answer": 2 },
+    { "stimulus": "If 2a + 3b = 12 and b = 2, find a.", "options": ["3", "6", "2", "4"], "answer": 0 },
+    { "stimulus": "The graph of y = |x − 3| shifts how compared to y = |x| ?", "options": ["right 3", "left 3", "up 3", "down 3"], "answer": 0 },
+    { "stimulus": "Solve for n: 5^(n) = 125", "options": ["2", "3", "4", "5"], "answer": 1 },
+    { "stimulus": "Triangle has sides 5, 12, 13. Is it right?", "options": ["Yes", "No", "Cannot determine", "Only if area given"], "answer": 0 },
+    { "stimulus": "Convert 3 000 g to kg.", "options": ["0.3", "3", "30", "300"], "answer": 1 },
+    { "stimulus": "Simplify (x²y³)(xy⁴).", "options": ["x³y⁷", "x²y⁷", "x³y⁶", "x²y⁶"], "answer": 2 },
+    { "stimulus": "What is the slope of line through (−1, 4) and (3, −8)?", "options": ["3", "−3", "−12/4", "−12/4 simplified"], "answer": 1 },
+    { "stimulus": "If g(x) = 2x − 5 and h(x) = x², find g(h(3)).", "options": ["4", "7", "13", "19"], "answer": 3 },
+    { "stimulus": "Which is a factor of x² − 9 ?", "options": ["x + 3", "x + 9", "x − 1", "x − 9"], "answer": 0 },
+    { "stimulus": "A shop buys a gadget for $60 and sells at 25 % profit. What is sale price?", "options": ["$75", "$80", "$85", "$90"], "answer": 1 },
+    { "stimulus": "Solve: |2t − 6| = 4", "options": ["t = 5 only", "t = 1 only", "t = 1 or 5", "t = −1 or −5"], "answer": 2 },
+    { "stimulus": "What is the median of 2, 7, 4, 9, 5 ?", "options": ["4", "5", "6", "7"], "answer": 1 },
+    { "stimulus": "Circle circumference is 16π. Find radius.", "options": ["4", "8", "16", "32"], "answer": 1 },
+    { "stimulus": "If 50 % of x is 30, what is x ?", "options": ["15", "30", "45", "60"], "answer": 3 },
+    { "stimulus": "A line has equation 2x + 5y = 20. What is the y-intercept?", "options": ["(0, 2)", "(2, 0)", "(0, 4)", "(5, 0)"], "answer": 2 }
+  ]
+}
