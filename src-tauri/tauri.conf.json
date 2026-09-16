@@ -19,13 +19,17 @@
         "minWidth": 1024,
         "minHeight": 640,
         "center": true,
+        "focus": true,
         "resizable": false,
         "fullscreen": true,
         "decorations": false,
         "minimizable": false,
         "maximizable": false,
         "closable": false,
-        "alwaysOnTop": true
+        "alwaysOnTop": true,
+        "contentProtected": true,
+        "devtools": false,
+        "zoomHotkeysEnabled": false
       }
     ],
     "security": {
