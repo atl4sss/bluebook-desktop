@@ -81,62 +81,74 @@ fn apply_macos_lockdown(_app: &tauri::AppHandle, _enabled: bool) -> Result<(), S
 #[cfg(target_os = "windows")]
 mod windows_lockdown {
     use super::LOCKDOWN_ACTIVE;
-    use std::sync::atomic::Ordering;
+    use std::sync::atomic::{AtomicBool, Ordering};
     use std::thread;
     use windows_sys::Win32::Foundation::{LPARAM, LRESULT, WPARAM};
     use windows_sys::Win32::UI::Input::KeyboardAndMouse::{
-        GetAsyncKeyState, VK_CONTROL, VK_ESCAPE, VK_LCONTROL, VK_LMENU, VK_LSHIFT, VK_LWIN,
-        VK_MENU, VK_RCONTROL, VK_RMENU, VK_RSHIFT, VK_RWIN, VK_SHIFT, VK_SNAPSHOT, VK_TAB,
+        VK_ESCAPE, VK_LCONTROL, VK_LMENU, VK_LSHIFT, VK_LWIN, VK_RCONTROL, VK_RMENU, VK_RSHIFT,
+        VK_RWIN, VK_SNAPSHOT, VK_TAB,
     };
     use windows_sys::Win32::UI::WindowsAndMessaging::{
         CallNextHookEx, DispatchMessageW, GetMessageW, SetWindowsHookExW, TranslateMessage,
-        HC_ACTION, KBDLLHOOKSTRUCT, MSG, WH_KEYBOARD_LL, WM_KEYDOWN, WM_SYSKEYDOWN,
+        HC_ACTION, KBDLLHOOKSTRUCT, MSG, WH_KEYBOARD_LL, WM_KEYDOWN, WM_KEYUP, WM_SYSKEYDOWN,
+        WM_SYSKEYUP,
     };
+
+    static CTRL_DOWN: AtomicBool = AtomicBool::new(false);
+    static ALT_DOWN: AtomicBool = AtomicBool::new(false);
+    static SHIFT_DOWN: AtomicBool = AtomicBool::new(false);
 
     const VK_F4_CODE: u32 = 0x73;
 
-    fn key_down(vk: i32) -> bool {
-        unsafe { (GetAsyncKeyState(vk) as u16 & 0x8000) != 0 }
-    }
-
-    fn ctrl_down() -> bool {
-        key_down(VK_CONTROL as i32)
-            || key_down(VK_LCONTROL as i32)
-            || key_down(VK_RCONTROL as i32)
-    }
-
-    fn alt_down() -> bool {
-        key_down(VK_MENU as i32) || key_down(VK_LMENU as i32) || key_down(VK_RMENU as i32)
-    }
-
-    fn shift_down() -> bool {
-        key_down(VK_SHIFT as i32) || key_down(VK_LSHIFT as i32) || key_down(VK_RSHIFT as i32)
+    fn set_modifier(vk: u32, down: bool) {
+        match vk {
+            x if x == VK_LCONTROL as u32 || x == VK_RCONTROL as u32 => {
+                CTRL_DOWN.store(down, Ordering::SeqCst);
+            }
+            x if x == VK_LMENU as u32 || x == VK_RMENU as u32 => {
+                ALT_DOWN.store(down, Ordering::SeqCst);
+            }
+            x if x == VK_LSHIFT as u32 || x == VK_RSHIFT as u32 => {
+                SHIFT_DOWN.store(down, Ordering::SeqCst);
+            }
+            _ => {}
+        }
     }
 
     unsafe extern "system" fn keyboard_hook(code: i32, wparam: WPARAM, lparam: LPARAM) -> LRESULT {
-        if code == HC_ACTION as i32
-            && LOCKDOWN_ACTIVE.load(Ordering::SeqCst)
-            && (wparam as u32 == WM_KEYDOWN || wparam as u32 == WM_SYSKEYDOWN)
-        {
+        if code == HC_ACTION as i32 {
             let info = &*(lparam as *const KBDLLHOOKSTRUCT);
             let vk = info.vkCode;
+            let message = wparam as u32;
+            let is_down = message == WM_KEYDOWN || message == WM_SYSKEYDOWN;
+            let is_up = message == WM_KEYUP || message == WM_SYSKEYUP;
 
-            // Keep the emergency exit combo available to the Tauri webview.
-            let emergency_combo =
-                ctrl_down() && alt_down() && shift_down() && vk == b'K' as u32;
+            if is_down {
+                set_modifier(vk, true);
+            } else if is_up {
+                set_modifier(vk, false);
+            }
 
-            if !emergency_combo {
-                let block = vk == VK_LWIN as u32
-                    || vk == VK_RWIN as u32
-                    || vk == VK_SNAPSHOT as u32
-                    || (vk == VK_TAB as u32 && alt_down())
-                    || (vk == VK_ESCAPE as u32 && alt_down())
-                    || (vk == VK_ESCAPE as u32 && ctrl_down())
-                    || (vk == VK_ESCAPE as u32 && ctrl_down() && shift_down())
-                    || (vk == VK_F4_CODE && alt_down());
+            if LOCKDOWN_ACTIVE.load(Ordering::SeqCst) && is_down {
+                let ctrl = CTRL_DOWN.load(Ordering::SeqCst);
+                let alt = ALT_DOWN.load(Ordering::SeqCst);
+                let shift = SHIFT_DOWN.load(Ordering::SeqCst);
 
-                if block {
-                    return 1;
+                // Keep Ctrl+Alt+Shift+K available for the app's emergency exit.
+                let emergency_combo = ctrl && alt && shift && vk == b'K' as u32;
+
+                if !emergency_combo {
+                    let block = vk == VK_LWIN as u32
+                        || vk == VK_RWIN as u32
+                        || vk == VK_SNAPSHOT as u32
+                        || (vk == VK_TAB as u32 && alt)
+                        || (vk == VK_ESCAPE as u32 && alt)
+                        || (vk == VK_ESCAPE as u32 && ctrl)
+                        || (vk == VK_F4_CODE && alt);
+
+                    if block {
+                        return 1;
+                    }
                 }
             }
         }
