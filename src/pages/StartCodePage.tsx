@@ -10,8 +10,10 @@ import { ClipboardList, HelpCircle, Home } from "lucide-react";
 import {
   createSession,
   normalizeAccessCode,
+  normalizeName,
   sessionErrorMessage,
   validateName,
+  type Session,
 } from "../services/sessionService";
 import { useSession } from "../app/sessionContext";
 import Modal from "../components/ui/Modal";
@@ -30,6 +32,11 @@ export default function StartCodePage() {
   const [digits, setDigits] = useState<string[]>(Array(6).fill(""));
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [registration, setRegistration] = useState<{
+    code: string;
+    session: Session;
+    confirmed: boolean;
+  } | null>(null);
   const [dialog, setDialog] = useState<"help" | "instructions" | "home" | null>(
     null,
   );
@@ -41,6 +48,9 @@ export default function StartCodePage() {
     cells.current[0]?.focus();
   }, []);
   const complete = digits.every((digit) => /^\d$/.test(digit));
+  const awaitingConfirmation = registration !== null && !registration.confirmed;
+  const statusError =
+    error || (awaitingConfirmation ? "The start code is incorrect." : "");
 
   function fill(raw: string, start: number) {
     const value = normalizeAccessCode(raw);
@@ -49,14 +59,13 @@ export default function StartCodePage() {
       return;
     }
     const incoming = value.slice(0, 6 - start).split("");
-    setDigits((previous) => {
-      const next = [...previous];
-      if (!incoming.length) next[start] = "";
-      incoming.forEach((digit, offset) => {
-        next[start + offset] = digit;
-      });
-      return next;
+    const next = [...digits];
+    if (!incoming.length) next[start] = "";
+    incoming.forEach((digit, offset) => {
+      next[start + offset] = digit;
     });
+    if (next.join("") !== digits.join("")) setRegistration(null);
+    setDigits(next);
     setError("");
     cells.current[Math.min(start + incoming.length, 5)]?.focus();
   }
@@ -84,13 +93,21 @@ export default function StartCodePage() {
       setDialog("help");
       return;
     }
+    if (registration) {
+      setError("");
+      if (registration.confirmed) {
+        startSession(registration.session);
+        navigate("/test", { replace: true });
+      }
+      return;
+    }
     submitting.current = true;
     setLoading(true);
     setError("");
     try {
-      const session = await createSession(digits.join(""), name);
-      startSession(session);
-      navigate("/test", { replace: true });
+      const code = digits.join("");
+      const session = await createSession(code, name);
+      setRegistration({ code, session, confirmed: false });
     } catch (failure) {
       setError(sessionErrorMessage(failure));
     } finally {
@@ -132,7 +149,7 @@ export default function StartCodePage() {
                   cells.current[index] = element;
                 }}
                 aria-label={`Digit ${index + 1}`}
-                aria-invalid={Boolean(error)}
+                aria-invalid={Boolean(statusError)}
                 type="text"
                 inputMode="numeric"
                 autoComplete={index === 0 ? "one-time-code" : "off"}
@@ -156,13 +173,15 @@ export default function StartCodePage() {
             className="access-submit"
             disabled={!complete || loading}
           >
-            {loading ? "Starting…" : "Start Test"}
+            {loading ? "Sending…" : "Start Test"}
           </button>
           <div id="code-status" className="access-status" aria-live="polite">
-            {error ? (
-              <p role="alert">{error}</p>
+            {statusError ? (
+              <p role="alert">{statusError}</p>
             ) : loading ? (
               "Connecting securely…"
+            ) : registration?.confirmed ? (
+              "Code confirmed. Press Start Test when you are ready."
             ) : null}
           </div>
         </form>
@@ -195,8 +214,10 @@ export default function StartCodePage() {
                 className="access-name-form"
                 onSubmit={(event) => {
                   event.preventDefault();
+                  if (submitting.current) return;
                   try {
                     const savedName = validateName(nameDraft);
+                    if (savedName !== name) setRegistration(null);
                     setName(savedName);
                     setNameDraft(savedName);
                     setNameError("");
@@ -222,6 +243,7 @@ export default function StartCodePage() {
                   autoFocus
                   autoComplete="name"
                   maxLength={80}
+                  disabled={loading}
                   value={nameDraft}
                   onChange={(event) => {
                     setNameDraft(event.target.value);
@@ -235,7 +257,9 @@ export default function StartCodePage() {
                     {nameError}
                   </p>
                 )}
-                <button type="submit">Save name</button>
+                <button type="submit" disabled={loading}>
+                  Save name
+                </button>
               </form>
               <p>
                 Enter the six-digit code shared by your practice test organizer.
@@ -243,11 +267,47 @@ export default function StartCodePage() {
               </p>
               <p>
                 Your saved name and code will be sent to the test organizer when
-                you press Start Test.
+                you first press Start Test. The test will wait for your
+                confirmation.
               </p>
+              <div className="access-confirmation">
+                <p>
+                  After checking the code with your test organizer, confirm it
+                  here. Then press Start Test at the agreed time.
+                </p>
+                {registration && (
+                  <p>
+                    Submitted code: <strong>{registration.code}</strong>
+                  </p>
+                )}
+                <button
+                  type="button"
+                  disabled={
+                    loading ||
+                    !registration ||
+                    registration.confirmed ||
+                    normalizeName(nameDraft) !== name
+                  }
+                  onClick={() => {
+                    if (!registration || submitting.current) return;
+                    setRegistration({ ...registration, confirmed: true });
+                    setError("");
+                    setDialog(null);
+                  }}
+                >
+                  {registration?.confirmed
+                    ? "Code confirmed"
+                    : "Confirm code is correct"}
+                </button>
+              </div>
             </div>
           ) : dialog === "instructions" ? (
             <div className="space-y-3">
+              <p>
+                First submit your code, confirm it in Help after checking with
+                your test organizer, then press Start Test at the agreed time.
+                The timer starts only when the test opens.
+              </p>
               <p>
                 This practice test has two Reading and Writing modules, a
                 ten-minute break, and two Math modules.
@@ -270,6 +330,7 @@ export default function StartCodePage() {
                 onClick={() => {
                   endSession();
                   setDigits(Array(6).fill(""));
+                  setRegistration(null);
                   setError("");
                   setDialog(null);
                 }}

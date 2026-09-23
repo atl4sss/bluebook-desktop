@@ -7,6 +7,7 @@ import SessionProvider from "../src/app/SessionProvider";
 import {
   createSession,
   validateAccessCode,
+  type Session,
 } from "../src/services/sessionService";
 vi.mock("../src/services/sessionService", async (importOriginal) => ({
   ...(await importOriginal<typeof import("../src/services/sessionService")>()),
@@ -29,8 +30,21 @@ function paste(code: string) {
     clipboardData: { getData: () => code },
   });
 }
+function confirmCode() {
+  fireEvent.click(screen.getByRole("button", { name: "Help" }));
+  fireEvent.click(
+    screen.getByRole("button", { name: "Confirm code is correct" }),
+  );
+}
+async function submitSavedNameCode(code = "123456") {
+  paste(code);
+  fireEvent.click(screen.getByRole("button", { name: "Start Test" }));
+  expect(await screen.findByRole("alert")).toHaveTextContent(
+    "The start code is incorrect.",
+  );
+}
 beforeEach(() => {
-  vi.clearAllMocks();
+  vi.resetAllMocks();
   localStorage.clear();
 });
 describe("Access screen", () => {
@@ -40,7 +54,7 @@ describe("Access screen", () => {
     expect(() => validateAccessCode("")).toThrow();
   });
   it("disables incomplete submissions and submits once while loading", async () => {
-    let resolve!: (value: { sessionId: string }) => void;
+    let resolve!: (value: Session) => void;
     vi.mocked(createSession).mockReturnValue(
       new Promise((done) => {
         resolve = done;
@@ -56,13 +70,31 @@ describe("Access screen", () => {
     expect(screen.getByRole("button", { name: "Start Test" })).toBeDisabled();
     paste("００１２３４");
     fireEvent.click(screen.getByRole("button", { name: "Start Test" }));
-    expect(screen.getByRole("button", { name: "Starting…" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Sending…" })).toBeDisabled();
+    fireEvent.click(screen.getByRole("button", { name: "Help" }));
+    expect(
+      screen.getByRole("button", { name: "Confirm code is correct" }),
+    ).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Save name" })).toBeDisabled();
+    fireEvent.click(screen.getByRole("button", { name: "Close dialog" }));
     expect(createSession).toHaveBeenCalledExactlyOnceWith(
       "001234",
       "Arina Masalskaia",
     );
     resolve({ sessionId: "test-session", name: "Arina Masalskaia" });
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "The start code is incorrect.",
+    );
+    expect(screen.queryByText("Test loaded")).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Start Test" }));
+    expect(createSession).toHaveBeenCalledTimes(1);
+    expect(screen.queryByText("Test loaded")).not.toBeInTheDocument();
+    confirmCode();
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    expect(screen.queryByText("Test loaded")).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Start Test" }));
     expect(await screen.findByText("Test loaded")).toBeVisible();
+    expect(createSession).toHaveBeenCalledTimes(1);
   });
   it("keeps the code after network errors and allows a retry", async () => {
     vi.mocked(createSession)
@@ -78,6 +110,19 @@ describe("Access screen", () => {
       "Check your connection",
     );
     expect(screen.getByLabelText("Digit 1")).toHaveValue("1");
+    fireEvent.click(screen.getByRole("button", { name: "Help" }));
+    expect(
+      screen.getByRole("button", { name: "Confirm code is correct" }),
+    ).toBeDisabled();
+    fireEvent.click(screen.getByRole("button", { name: "Close dialog" }));
+    fireEvent.click(screen.getByRole("button", { name: "Start Test" }));
+    await waitFor(() =>
+      expect(screen.getByRole("alert")).toHaveTextContent(
+        "The start code is incorrect.",
+      ),
+    );
+    expect(screen.queryByText("Test loaded")).not.toBeInTheDocument();
+    confirmCode();
     fireEvent.click(screen.getByRole("button", { name: "Start Test" }));
     await waitFor(() => expect(screen.getByText("Test loaded")).toBeVisible());
   });
@@ -92,6 +137,64 @@ describe("Access screen", () => {
     fireEvent.click(screen.getByRole("button", { name: "Close dialog" }));
     expect(screen.queryByRole("dialog")).toBeNull();
   });
+});
+
+it("requires a fresh submission and confirmation when a confirmed code changes", async () => {
+  localStorage.setItem("sat-practice-name", "Student");
+  vi.mocked(createSession).mockResolvedValue({
+    sessionId: "entry",
+    name: "Student",
+  });
+  setup();
+  await submitSavedNameCode();
+  confirmCode();
+  await submitSavedNameCode("654321");
+  expect(createSession).toHaveBeenNthCalledWith(2, "654321", "Student");
+  expect(screen.queryByText("Test loaded")).not.toBeInTheDocument();
+  fireEvent.click(screen.getByRole("button", { name: "Help" }));
+  expect(screen.getByText("654321")).toBeVisible();
+  fireEvent.click(
+    screen.getByRole("button", { name: "Confirm code is correct" }),
+  );
+  fireEvent.click(screen.getByRole("button", { name: "Start Test" }));
+  expect(await screen.findByText("Test loaded")).toBeVisible();
+  expect(createSession).toHaveBeenCalledTimes(2);
+});
+
+it("invalidates confirmation when the saved student name changes", async () => {
+  localStorage.setItem("sat-practice-name", "Student");
+  vi.mocked(createSession).mockResolvedValue({
+    sessionId: "entry",
+    name: "Student",
+  });
+  setup();
+  await submitSavedNameCode();
+  confirmCode();
+  fireEvent.click(screen.getByRole("button", { name: "Help" }));
+  fireEvent.change(screen.getByLabelText("Your name"), {
+    target: { value: "Other Student" },
+  });
+  fireEvent.click(screen.getByRole("button", { name: "Save name" }));
+  await submitSavedNameCode();
+  expect(createSession).toHaveBeenNthCalledWith(2, "123456", "Other Student");
+  expect(screen.queryByText("Test loaded")).not.toBeInTheDocument();
+});
+
+it("clears confirmation when returning home even if the same code is entered again", async () => {
+  localStorage.setItem("sat-practice-name", "Student");
+  vi.mocked(createSession).mockResolvedValue({
+    sessionId: "entry",
+    name: "Student",
+  });
+  setup();
+  await submitSavedNameCode();
+  confirmCode();
+  fireEvent.click(screen.getByRole("button", { name: "Return to Home" }));
+  fireEvent.click(screen.getByRole("button", { name: "Clear code" }));
+  expect(screen.getByRole("button", { name: "Start Test" })).toBeDisabled();
+  await submitSavedNameCode();
+  expect(createSession).toHaveBeenCalledTimes(2);
+  expect(screen.queryByText("Test loaded")).not.toBeInTheDocument();
 });
 
 it("supports typing all digits and moving between them with the keyboard", async () => {

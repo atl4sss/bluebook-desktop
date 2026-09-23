@@ -112,6 +112,8 @@ enteredCodes/{normalizedName}__{code}__{timestamp}
 
 The name is remembered locally on that computer. No Firebase account or Cloud Function is required. Firestore rules validate writes and deny client reads, updates, and deletes. Because unauthenticated clients can create validly shaped entries, monitor usage and consider App Check or a server endpoint before broad public distribution.
 
+Submitting the code does not start the test. After the write succeeds, the start page shows the red message **The start code is incorrect.** until the student opens Help and selects **Confirm code is correct** after checking with the organizer. The student then presses **Start Test** again at the agreed time; only that action opens the test and starts its timer. Repeated clicks while waiting do not create duplicate entries. Changing the code or saved name, clearing the code, or reloading requires a new submission and confirmation. This is manual coordination, not a shared server countdown or remote code verification.
+
 ## Local Firebase checks
 
 No production credentials are needed for demo emulators. Use these values in `.env.local`:

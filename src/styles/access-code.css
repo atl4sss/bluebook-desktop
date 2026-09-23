@@ -148,13 +148,24 @@
   color: #8f2020;
   font-size: 13px;
 }
-.access-name-form button {
+.access-name-form button,
+.access-confirmation button {
   justify-self: start;
   margin-top: 4px;
   padding: 8px 18px;
   border: 1px solid #6e7974;
   border-radius: 999px;
   background: #fff;
+}
+.access-confirmation {
+  display: grid;
+  gap: 12px;
+  border-top: 1px solid #929b98;
+  padding-top: 16px;
+}
+.access-confirmation button:disabled,
+.access-name-form button:disabled {
+  opacity: 0.5;
 }
 @media (max-height: 740px) {
   .access-main {

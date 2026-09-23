@@ -16,6 +16,8 @@ No Firebase Authentication or Cloud Function is used. Rules allow only strictly 
 
 This is code registration, not an allowlist-based access-control system. All valid six-digit codes are accepted. No exam answers are transmitted.
 
+`StartCodePage` retains the submitted code, returned session, and a confirmation flag locally. A successful write leaves the session provider empty and displays the requested incorrect-code message. Help can confirm a successfully submitted code; confirmation itself does not navigate. A subsequent Start Test click activates the session and opens `/test`, where the timer is initialized. Editing the code, changing the saved name, or clearing the code discards registration and confirmation. Name/code edits are disabled during the write. Confirmation does not persist across reloads, and no server-synchronized start time is implemented.
+
 ## SAT state and components
 
 `data/testStages.js` contains the original active question banks, unchanged, and linear stage order: RW1 → RW2 → break → Math1 → Math2. The separate original JSON banks remain available but unused.
