@@ -17,6 +17,8 @@ import {
 } from "../services/sessionService";
 import { useSession } from "../app/sessionContext";
 import Modal from "../components/ui/Modal";
+import ReadySignal from "../components/ReadySignal";
+import { verbalInstructions } from "../data/verbalInstructions";
 import "../styles/access-code.css";
 
 export default function StartCodePage() {
@@ -300,9 +302,25 @@ export default function StartCodePage() {
                     : "Confirm code is correct"}
                 </button>
               </div>
+              <button
+                type="button"
+                className="underline"
+                onClick={() => setDialog("instructions")}
+              >
+                Verbal Instructions
+              </button>
+              {registration && normalizeName(nameDraft) === name && (
+                <ReadySignal
+                  key={registration.session.sessionId}
+                  session={registration.session}
+                  code={registration.code}
+                />
+              )}
             </div>
           ) : dialog === "instructions" ? (
             <div className="space-y-3">
+              <p>{verbalInstructions}</p>
+              <hr />
               <p>
                 First submit your code, confirm it in Help after checking with
                 your test organizer, then press Start Test at the agreed time.

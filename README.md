@@ -70,7 +70,7 @@ These are development/unsigned distribution builds unless you configure platform
 
 ## Desktop full-screen mode
 
-Native builds start in fullscreen without window borders or minimize controls. **Ctrl+Alt+Shift+K** (macOS: **Control+Option+Shift+K**) toggles back to a normal window; the same shortcut re-enters fullscreen. Browser development remains unchanged. This mode does not guarantee blocking OS app switching. Read [KIOSK.md](docs/KIOSK.md) for recovery, configuration, and system-level limitations.
+Native builds start in fullscreen without window borders or minimize controls. Windows filters common switching shortcuts including Alt+Tab; macOS disables the Command+Tab interface through AppKit. **Ctrl+Alt+Shift+K** (macOS: **Control+Option+Shift+K**) restores a normal window and normal shortcut behavior; the same shortcut re-enters fullscreen. Browser development remains unchanged. Trackpad gestures and Mission Control are not fully restricted. Read [KIOSK.md](docs/KIOSK.md) for recovery, configuration, and system-level limitations.
 
 ## Firebase setup
 
@@ -113,6 +113,8 @@ enteredCodes/{normalizedName}__{code}__{timestamp}
 The name is remembered locally on that computer. No Firebase account or Cloud Function is required. Firestore rules validate writes and deny client reads, updates, and deletes. Because unauthenticated clients can create validly shaped entries, monitor usage and consider App Check or a server endpoint before broad public distribution.
 
 Submitting the code does not start the test. After the write succeeds, the start page shows the red message **The start code is incorrect.** until the student opens Help and selects **Confirm code is correct** after checking with the organizer. The student then presses **Start Test** again at the agreed time; only that action opens the test and starts its timer. Repeated clicks while waiting do not create duplicate entries. Changing the code or saved name, clearing the code, or reloading requires a new submission and confirmation. This is manual coordination, not a shared server countdown or remote code verification.
+
+After submitting a code, Help → **•••** → **I’m ready** creates a readiness entry in the same `enteredCodes` collection. It uses document ID `<sessionId>__ready`, the original six-digit code, and `name: "Готов: <student name>"` (truncated to the existing 80-character limit). It deliberately preserves the deployed three-field schema, so no rules change is required. The receiving code-notification integration must forward new entries including their names for the readiness label to reach the same recipient. This repository does not contain that deployed integration; writing the entry is verified locally with mocks, but end-to-end push delivery has not been tested. Acknowledged sends are deduplicated for the current app session. Readiness neither confirms the code nor starts the test. The provided verbal instructions are available from Review the Instructions and Help → Verbal Instructions; their wording does not add process detection or official College Board score handling to this independent app.
 
 ## Local Firebase checks
 

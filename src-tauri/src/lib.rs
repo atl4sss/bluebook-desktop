@@ -1,5 +1,6 @@
 use std::sync::atomic::{AtomicBool, Ordering};
 use tauri::Manager;
+mod kiosk_shortcuts;
 
 struct KioskState(AtomicBool);
 
@@ -21,8 +22,21 @@ fn app_info(app: tauri::AppHandle) -> AppInfo {
 pub fn run() {
     tauri::Builder::default()
         .manage(KioskState(AtomicBool::new(true)))
+        .setup(|_| {
+            kiosk_shortcuts::set_enabled(true).map_err(std::io::Error::other)?;
+            Ok(())
+        })
         .on_window_event(|window, event| {
             if window.label() == "main" {
+                // AppKit can adjust presentation flags during fullscreen transitions.
+                #[cfg(target_os = "macos")]
+                if matches!(event, tauri::WindowEvent::Resized(_) | tauri::WindowEvent::Focused(true))
+                    && window.state::<KioskState>().inner().0.load(Ordering::SeqCst)
+                {
+                    if let Err(error) = kiosk_shortcuts::set_enabled(true) {
+                        eprintln!("Could not restore kiosk presentation: {error}");
+                    }
+                }
                 if let tauri::WindowEvent::CloseRequested { api, .. } = event {
                     if window.state::<KioskState>().inner().0.load(Ordering::SeqCst) {
                         api.prevent_close();
@@ -43,6 +57,7 @@ fn toggle_kiosk(window: tauri::WebviewWindow, state: tauri::State<KioskState>) -
     let enabled = !state.inner().0.load(Ordering::SeqCst);
     // Always release the close guard first, so a partial failure stays recoverable.
     state.inner().0.store(false, Ordering::SeqCst);
+    kiosk_shortcuts::set_enabled(false)?;
     let apply = || -> tauri::Result<()> {
         if !enabled {
             window.set_always_on_top(false)?;
@@ -72,6 +87,17 @@ fn toggle_kiosk(window: tauri::WebviewWindow, state: tauri::State<KioskState>) -
         let _ = window.set_minimizable(true);
         let _ = window.set_maximizable(true);
         return Err(error.to_string());
+    }
+    if let Err(error) = kiosk_shortcuts::set_enabled(enabled) {
+        let _ = kiosk_shortcuts::set_enabled(false);
+        let _ = window.set_always_on_top(false);
+        let _ = window.set_closable(true);
+        let _ = window.set_fullscreen(false);
+        let _ = window.set_decorations(true);
+        let _ = window.set_resizable(true);
+        let _ = window.set_minimizable(true);
+        let _ = window.set_maximizable(true);
+        return Err(error);
     }
     state.inner().0.store(enabled, Ordering::SeqCst);
     Ok(enabled)

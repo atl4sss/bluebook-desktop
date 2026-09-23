@@ -4,6 +4,7 @@ import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import StartCodePage from "../src/pages/StartCodePage";
 import SessionProvider from "../src/app/SessionProvider";
+import { verbalInstructions } from "../src/data/verbalInstructions";
 import {
   createSession,
   validateAccessCode,
@@ -134,6 +135,7 @@ describe("Access screen", () => {
       screen.getByRole("button", { name: /review the instructions/ }),
     );
     expect(screen.getByRole("dialog")).toBeVisible();
+    expect(screen.getByText(verbalInstructions)).toBeVisible();
     fireEvent.click(screen.getByRole("button", { name: "Close dialog" }));
     expect(screen.queryByRole("dialog")).toBeNull();
   });

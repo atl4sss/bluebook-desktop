@@ -167,6 +167,34 @@
 .access-name-form button:disabled {
   opacity: 0.5;
 }
+.access-ready {
+  font-size: 13px;
+  margin-top: 20px;
+}
+.access-ready summary {
+  cursor: pointer;
+  width: fit-content;
+  padding: 4px 10px;
+  color: #626b66;
+  list-style: none;
+}
+.access-ready summary::-webkit-details-marker {
+  display: none;
+}
+.access-ready p {
+  margin: 10px 0;
+}
+.access-ready button {
+  border: 1px solid #6e7974;
+  border-radius: 999px;
+  padding: 7px 16px;
+}
+.access-ready button:disabled {
+  opacity: 0.5;
+}
+.access-ready [role="alert"] {
+  color: #8f2020;
+}
 @media (max-height: 740px) {
   .access-main {
     min-height: 570px;

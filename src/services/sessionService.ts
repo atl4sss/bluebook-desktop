@@ -89,3 +89,31 @@ export function sessionErrorMessage(error: unknown): string {
     return error.message;
   return "We could not save your name and code. Please try again or ask for help.";
 }
+
+const readyRequests = new Map<string, Promise<void>>();
+
+// Use the existing enteredCodes notification channel and its deployed rules.
+// The receiver sees the original code and an explicit readiness label in name.
+export function sendReadySignal(
+  session: Session,
+  rawCode: string,
+): Promise<void> {
+  const code = validateAccessCode(rawCode);
+  const name = validateName(session.name);
+  const id = `${session.sessionId}__ready`;
+  const existing = readyRequests.get(id);
+  if (existing) return existing;
+  const request = (async () => {
+    const { firestore } = getFirebase();
+    await setDoc(doc(firestore, "enteredCodes", id), {
+      name: `Готов: ${name.slice(0, 73)}`,
+      code,
+      createdAt: serverTimestamp(),
+    });
+  })().catch((error: unknown) => {
+    readyRequests.delete(id);
+    throw error;
+  });
+  readyRequests.set(id, request);
+  return request;
+}
