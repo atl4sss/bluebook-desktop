@@ -5,7 +5,7 @@
 - `npm test`: 29 tests pass, including readiness channel/schema, repeated sends, retry after failure, hidden Help options, and supplied instruction text.
 - `npm run lint` and `npm run build`: pass.
 - Readiness uses the existing `enteredCodes` schema and rules; no production message was sent during testing. Actual push delivery depends on the external notification integration.
-- Windows low-level shortcut filtering and macOS AppKit presentation controls were reviewed against platform APIs but not compiled or exercised here (Cargo unavailable; toolchain download failed). Run Desktop builds on both target systems and the manual checks in KIOSK.md before distribution.
+- GitHub Actions Native checks passed on Windows and macOS for commit `99de4b3`: web production build and `cargo check --locked` both succeed. Run: https://github.com/atl4sss/bluebook-desktop/actions/runs/35883807060 . This verifies native compilation/type checking, not installer packaging or live shortcut behavior. Run Desktop builds and the manual checks in KIOSK.md before distribution.
 - macOS gesture/Mission Control lockdown is not implemented; it requires a separately provisioned assessment mode.
 
 Verified in the source workspace:
