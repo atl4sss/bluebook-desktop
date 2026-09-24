@@ -364,7 +364,19 @@ export default function StartCodePage() {
             </div>
           ) : (
             <div className="space-y-4">
-              <p>You are on the start screen. Clear the code to begin again?</p>
+              <p>
+                Return to your tests or clear the code to begin again. Returning
+                home clears this code and its confirmation.
+              </p>
+              <button
+                className="border rounded-full px-5 py-2"
+                onClick={() => {
+                  endSession();
+                  navigate("/", { replace: true });
+                }}
+              >
+                Return home
+              </button>
               <button
                 className="border rounded-full px-5 py-2"
                 onClick={() => {

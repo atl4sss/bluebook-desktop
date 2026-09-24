@@ -2,9 +2,15 @@
 
 ## Entry and routes
 
-`main.jsx` mounts `App.jsx` under React StrictMode. `App` wraps the router in an error boundary and an in-memory `SessionProvider`. Hash routing works with both Vite and Tauri's packaged custom protocol. `/` is the access screen; `/test` and `/finish` require a started session. Unknown paths return to `/`. The finish page also needs completion information from the test screen.
+`main.jsx` mounts `App.jsx` under React StrictMode. `App` wraps the router in an error boundary and an in-memory `SessionProvider`. Hash routing works with both Vite and Tauri's packaged custom protocol. `/` is the editable Your Tests dashboard; `/start-code` is the access screen; `/test` and `/finish` require a started session. Unknown paths return to `/`. The finish page also needs completion information from the test screen.
 
 The route gate is user-flow state, not an authorization boundary. Firestore Security Rules control database access. Reloading clears the in-memory test session and progress intentionally; offline disk recovery is not implemented.
+
+## Home and test-card settings
+
+`HomePage.tsx` provides the welcome header, Your Tests card, independent Active/Past filters, and Practice and Prepare tiles. The profile button and card’s ••• button open the editor. `testCardSettings.ts` loads validated field types from `sat-practice-test-card-v1`; the student name shares `sat-practice-name` with the start-code Help dialog. Saving settings only writes local storage. Displayed test name, schedule, location, accommodations, status, check-in label, overview, checklist, and optional score-sends information are editable. This metadata does not change the SAT question bank, durations, or send scores.
+
+The check-in and full-length practice buttons navigate to `/start-code` without creating a session or transmitting a code. Return home clears the code screen’s transient readiness state. Past tabs show an honest empty state because completed-session history is not persisted. The header uses the desktop product name from `tauri.conf.json` and the existing `public/app-icon.svg` asset.
 
 ## Firebase and startup
 

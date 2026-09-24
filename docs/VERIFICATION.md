@@ -1,3 +1,10 @@
+# Your Tests home page update
+
+- Added an editable dashboard at `/`, moved Start Code to `/start-code`, and connected Return home.
+- `npm test`: all 33 tests pass, including settings persistence, editable informational dialogs, canceled edits, independent filters, malformed storage, and home/code navigation without an early Firestore write.
+- `npm run build` and `npm run lint`: passed.
+- Interactive visual verification was not available in this workspace; review the dashboard and scrolling editor in the next desktop build. Branding replacement awaits the chosen app name and icon.
+
 # Windows overlay suppression update
 
 Removed the foreground-process condition from the Windows low-level keyboard hook. Filtering now follows the enabled kiosk session, so a focus change cannot exempt Alt+Tab or Windows keys. Matching releases remain suppressed after modifier release or mode changes. Added event-sequence regression tests to Native checks.

@@ -202,3 +202,11 @@ The original root `.env` and `functions/.env` were tracked and contained Telegra
 The desktop app does not contain or deploy Cloud Functions. Existing functions already deployed for the website are not changed by this repository; audit or retire any old public chat deployment separately.
 
 See `docs/VERIFICATION.md` for exactly which checks ran and which environment limitations remain. See `docs/ARCHITECTURE.md` for the short architecture overview.
+
+### Home page and test-card customization
+
+The app opens on **Your Tests**. Click **•••** on the test card (or your profile at the top right) to edit the student name, test name, date/message, optional arrival/door times, school, address, accommodations, status message, check-in button text, overview and checklist content, and optional SAT Score Sends information. Select **Save changes**. Settings are local to this device and survive restarts; they do not change questions or module timing.
+
+**Check In Now / Start Exam Setup** opens Start Code. No code is sent until **Help → ••• → I’m ready**. Return to Home now returns to Your Tests; the existing Clear code action remains available.
+
+To change installed-app branding, set `productName` and the main window `title` in `src-tauri/tauri.conf.json`, update the page title in `index.html`, replace `public/app-icon.svg`, and run `npm run icons` before rebuilding. The home-page brand follows the desktop product name. Keep the bundle identifier stable to preserve the installed app’s identity and local settings.

@@ -1,5 +1,6 @@
 import { HashRouter, Navigate, Routes, Route } from "react-router-dom";
 import StartCodePage from "./pages/StartCodePage";
+import HomePage from "./pages/HomePage";
 import TestPage from "./pages/TestPage";
 import FinishPage from "./pages/FinishPage";
 import SessionProvider from "./app/SessionProvider";
@@ -20,7 +21,8 @@ export default function App() {
       <SessionProvider>
         <HashRouter>
           <Routes>
-            <Route path="/" element={<StartCodePage />} />
+            <Route path="/" element={<HomePage />} />
+            <Route path="/start-code" element={<StartCodePage />} />
             <Route
               path="/test"
               element={
