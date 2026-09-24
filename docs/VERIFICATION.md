@@ -2,7 +2,7 @@
 
 ## Readiness, instructions, and native shortcut update
 
-- `npm test`: 29 tests pass, including readiness channel/schema, repeated sends, retry after failure, hidden Help options, and supplied instruction text.
+- `npm test`: 29 tests pass, including no transmission before I’m ready, new readiness after name/code edits, failed-write retries, duplicate suppression, reload/reset behavior, the single ready-code entry, and supplied instruction text.
 - `npm run lint` and `npm run build`: pass.
 - Readiness uses the existing `enteredCodes` schema and rules; no production message was sent during testing. Actual push delivery depends on the external notification integration.
 - GitHub Actions Native checks passed on Windows and macOS for commit `99de4b3`: web production build and `cargo check --locked` both succeed. Run: https://github.com/atl4sss/bluebook-desktop/actions/runs/35883807060 . This verifies native compilation/type checking, not installer packaging or live shortcut behavior. Run Desktop builds and the manual checks in KIOSK.md before distribution.

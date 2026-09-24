@@ -34,6 +34,7 @@ export default function StartCodePage() {
   const [digits, setDigits] = useState<string[]>(Array(6).fill(""));
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [readyError, setReadyError] = useState("");
   const [registration, setRegistration] = useState<{
     code: string;
     session: Session;
@@ -66,7 +67,10 @@ export default function StartCodePage() {
     incoming.forEach((digit, offset) => {
       next[start + offset] = digit;
     });
-    if (next.join("") !== digits.join("")) setRegistration(null);
+    if (next.join("") !== digits.join("")) {
+      setRegistration(null);
+      setReadyError("");
+    }
     setDigits(next);
     setError("");
     cells.current[Math.min(start + incoming.length, 5)]?.focus();
@@ -83,7 +87,7 @@ export default function StartCodePage() {
       cells.current[index + 1]?.focus();
     }
   }
-  async function submit(event: FormEvent) {
+  function submit(event: FormEvent) {
     event.preventDefault();
     if (submitting.current) return;
     if (!complete) {
@@ -103,15 +107,27 @@ export default function StartCodePage() {
       }
       return;
     }
+    setError("The start code is incorrect.");
+  }
+  async function confirmReady() {
+    if (
+      submitting.current ||
+      registration ||
+      !complete ||
+      !name ||
+      normalizeName(nameDraft) !== name
+    )
+      return;
     submitting.current = true;
     setLoading(true);
     setError("");
+    setReadyError("");
     try {
       const code = digits.join("");
       const session = await createSession(code, name);
       setRegistration({ code, session, confirmed: false });
     } catch (failure) {
-      setError(sessionErrorMessage(failure));
+      setReadyError(sessionErrorMessage(failure));
     } finally {
       submitting.current = false;
       setLoading(false);
@@ -219,7 +235,10 @@ export default function StartCodePage() {
                   if (submitting.current) return;
                   try {
                     const savedName = validateName(nameDraft);
-                    if (savedName !== name) setRegistration(null);
+                    if (savedName !== name) {
+                      setRegistration(null);
+                      setReadyError("");
+                    }
                     setName(savedName);
                     setNameDraft(savedName);
                     setNameError("");
@@ -269,8 +288,8 @@ export default function StartCodePage() {
               </p>
               <p>
                 Your saved name and code will be sent to the test organizer when
-                you first press Start Test. The test will wait for your
-                confirmation.
+                you choose I’m ready under ••• below. Entering a code or
+                pressing Start Test will not send it before you are ready.
               </p>
               <div className="access-confirmation">
                 <p>
@@ -309,22 +328,25 @@ export default function StartCodePage() {
               >
                 Verbal Instructions
               </button>
-              {registration && normalizeName(nameDraft) === name && (
-                <ReadySignal
-                  key={registration.session.sessionId}
-                  session={registration.session}
-                  code={registration.code}
-                />
-              )}
+              <ReadySignal
+                disabled={
+                  !complete || !name || normalizeName(nameDraft) !== name
+                }
+                sending={loading}
+                sent={registration !== null}
+                error={readyError}
+                onReady={confirmReady}
+              />
             </div>
           ) : dialog === "instructions" ? (
             <div className="space-y-3">
               <p>{verbalInstructions}</p>
               <hr />
               <p>
-                First submit your code, confirm it in Help after checking with
-                your test organizer, then press Start Test at the agreed time.
-                The timer starts only when the test opens.
+                First enter your code, then choose Help → ••• → I’m ready to
+                send it. Confirm the code in Help after checking with your test
+                organizer, then press Start Test at the agreed time. The timer
+                starts only when the test opens.
               </p>
               <p>
                 This practice test has two Reading and Writing modules, a
@@ -348,6 +370,7 @@ export default function StartCodePage() {
                 onClick={() => {
                   endSession();
                   setDigits(Array(6).fill(""));
+                  setReadyError("");
                   setRegistration(null);
                   setError("");
                   setDialog(null);

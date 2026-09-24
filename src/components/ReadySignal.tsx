@@ -1,54 +1,35 @@
-import { useRef, useState } from "react";
-import { sendReadySignal, type Session } from "../services/sessionService";
-
 export default function ReadySignal({
-  session,
-  code,
+  disabled,
+  sending,
+  sent,
+  error,
+  onReady,
 }: {
-  session: Session;
-  code: string;
+  disabled: boolean;
+  sending: boolean;
+  sent: boolean;
+  error: string;
+  onReady: () => void;
 }) {
-  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
-    "idle",
-  );
-  const pending = useRef(false);
-  async function send() {
-    if (pending.current || status === "sent") return;
-    pending.current = true;
-    setStatus("sending");
-    try {
-      await sendReadySignal(session, code);
-      setStatus("sent");
-    } catch {
-      setStatus("error");
-    } finally {
-      pending.current = false;
-    }
-  }
   return (
     <details className="access-ready">
       <summary aria-label="Additional help options">•••</summary>
       <p>
-        Let your test organizer know you are ready. This will not start your
-        test.
+        Confirm you are ready to send your name and code to the test organizer.
+        This will not start your test.
       </p>
       <button
         type="button"
-        disabled={status === "sending" || status === "sent"}
-        onClick={send}
+        disabled={disabled || sending || sent}
+        onClick={onReady}
       >
-        {status === "sending"
-          ? "Sending…"
-          : status === "sent"
-            ? "Readiness sent"
-            : "I’m ready"}
+        {sending ? "Sending…" : sent ? "Code sent" : "I’m ready"}
       </button>
-      {status === "sent" && <p role="status">Readiness recorded.</p>}
-      {status === "error" && (
-        <p role="alert">
-          Could not send readiness. Check your connection and try again.
-        </p>
+      {disabled && !sent && (
+        <p>Enter all six digits and save your name first.</p>
       )}
+      {sent && <p role="status">Your code and readiness have been sent.</p>}
+      {error && <p role="alert">{error}</p>}
     </details>
   );
 }

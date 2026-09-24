@@ -101,7 +101,7 @@ Vite replaces these values at build time. Restart Vite after changes, and rebuil
 
 ### Session flow
 
-The student enters and saves their name through Help. The six-digit code is normalized with Unicode NFKC and whitespace removal; leading zeros are retained. Pressing Start Test writes directly to Firestore:
+The student enters and saves their name through Help. The six-digit code is normalized with Unicode NFKC and whitespace removal; leading zeros are retained. Choosing Help → ••• → I’m ready writes directly to Firestore:
 
 ```text
 enteredCodes/{normalizedName}__{code}__{timestamp}
@@ -112,9 +112,11 @@ enteredCodes/{normalizedName}__{code}__{timestamp}
 
 The name is remembered locally on that computer. No Firebase account or Cloud Function is required. Firestore rules validate writes and deny client reads, updates, and deletes. Because unauthenticated clients can create validly shaped entries, monitor usage and consider App Check or a server endpoint before broad public distribution.
 
-Submitting the code does not start the test. After the write succeeds, the start page shows the red message **The start code is incorrect.** until the student opens Help and selects **Confirm code is correct** after checking with the organizer. The student then presses **Start Test** again at the agreed time; only that action opens the test and starts its timer. Repeated clicks while waiting do not create duplicate entries. Changing the code or saved name, clearing the code, or reloading requires a new submission and confirmation. This is manual coordination, not a shared server countdown or remote code verification.
+Entering a code or pressing **Start Test** does not transmit anything. The student first chooses Help → **•••** → **I’m ready**. Only this action sends one entry containing the six-digit code, a server timestamp, and `name: "Готов: <student name>"` (within the existing 80-character limit). It uses the existing session document ID and three-field `enteredCodes` schema; no separate readiness entry or rules change is needed. The in-app session retains the student's original name.
 
-After submitting a code, Help → **•••** → **I’m ready** creates a readiness entry in the same `enteredCodes` collection. It uses document ID `<sessionId>__ready`, the original six-digit code, and `name: "Готов: <student name>"` (truncated to the existing 80-character limit). It deliberately preserves the deployed three-field schema, so no rules change is required. The receiving code-notification integration must forward new entries including their names for the readiness label to reach the same recipient. This repository does not contain that deployed integration; writing the entry is verified locally with mocks, but end-to-end push delivery has not been tested. Acknowledged sends are deduplicated for the current app session. Readiness neither confirms the code nor starts the test. The provided verbal instructions are available from Review the Instructions and Help → Verbal Instructions; their wording does not add process detection or official College Board score handling to this independent app.
+After successful sending, the start page shows **The start code is incorrect.** until the student chooses **Confirm code is correct** in Help after checking with the organizer. A subsequent **Start Test** click opens the test and starts the timer. Changing the code or saved name, clearing the code, or reloading requires new readiness and code confirmation. Failed writes can be retried using **I’m ready**; repeated Start Test clicks never submit or retry a write. Readiness remains under ••• and is disabled until six digits and a saved name are present.
+
+The external receiving integration must forward new `enteredCodes` entries, including their names, for the code and readiness label to reach the same recipient. End-to-end push delivery has not been tested. This is manual coordination, not a shared server countdown. The provided verbal instructions are available from Review the Instructions and Help → Verbal Instructions; their wording does not add process detection or official College Board score handling.
 
 ## Local Firebase checks
 

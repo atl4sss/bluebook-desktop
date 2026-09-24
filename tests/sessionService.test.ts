@@ -18,11 +18,7 @@ vi.mock("firebase/firestore", () => ({
   setDoc: mocks.setDoc,
 }));
 
-import {
-  createSession,
-  sendReadySignal,
-  validateName,
-} from "../src/services/sessionService";
+import { createSession, validateName } from "../src/services/sessionService";
 
 beforeEach(() => vi.clearAllMocks());
 
@@ -40,7 +36,7 @@ describe("Direct Firestore session service", () => {
       expect.stringMatching(/^Arina_Masalskaia__001234__\d+$/),
     );
     expect(mocks.setDoc).toHaveBeenCalledWith(expect.anything(), {
-      name: "Arina Masalskaia",
+      name: "Готов: Arina Masalskaia",
       code: "001234",
       createdAt: { serverTimestamp: true },
     });
@@ -64,39 +60,15 @@ describe("Direct Firestore session service", () => {
   });
 });
 
-describe("Readiness notification channel", () => {
-  it("uses enteredCodes with the existing schema and deduplicates repeated sends", async () => {
-    mocks.setDoc.mockResolvedValueOnce(undefined);
-    const session = { sessionId: "ready-one", name: "Student" };
-    const first = sendReadySignal(session, "001234");
-    expect(sendReadySignal(session, "001234")).toBe(first);
-    await first;
-    await sendReadySignal(session, "001234");
-    expect(mocks.setDoc).toHaveBeenCalledTimes(1);
-    expect(mocks.doc).toHaveBeenCalledWith(
-      {},
-      "enteredCodes",
-      "ready-one__ready",
-    );
-    expect(mocks.setDoc).toHaveBeenCalledWith(expect.anything(), {
-      name: "Готов: Student",
-      code: "001234",
-      createdAt: { serverTimestamp: true },
-    });
-  });
-
-  it("retries failed signals with the same ID and respects the deployed name limit", async () => {
-    mocks.setDoc
-      .mockRejectedValueOnce(new Error("offline"))
-      .mockResolvedValueOnce(undefined);
-    const session = { sessionId: "ready-retry", name: "A".repeat(80) };
-    await expect(sendReadySignal(session, "123456")).rejects.toThrow("offline");
-    await sendReadySignal(session, "123456");
-    expect(mocks.setDoc).toHaveBeenCalledTimes(2);
-    expect(mocks.setDoc.mock.calls[1][1].name).toHaveLength(80);
-    expect(mocks.doc.mock.calls.map((call) => call[2])).toEqual([
-      "ready-retry__ready",
-      "ready-retry__ready",
-    ]);
-  });
+it("retries the same entry after failure and keeps readiness names within the rules limit", async () => {
+  mocks.setDoc
+    .mockRejectedValueOnce(new Error("offline"))
+    .mockResolvedValueOnce(undefined);
+  await expect(createSession("333333", "A".repeat(80))).rejects.toThrow(
+    "offline",
+  );
+  const failedId = mocks.doc.mock.calls[0][2];
+  await createSession("333333", "A".repeat(80));
+  expect(mocks.doc.mock.calls[1][2]).toBe(failedId);
+  expect(mocks.setDoc.mock.calls[1][1].name).toHaveLength(80);
 });
