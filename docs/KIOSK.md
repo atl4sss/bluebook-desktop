@@ -6,7 +6,7 @@ The Windows/macOS desktop app now starts in native fullscreen with no decoration
 
 Press **Ctrl+Alt+Shift+K** while the app has keyboard focus to return to a normal window without losing test progress. On macOS use **Control+Option+Shift+K**. The same shortcut returns to fullscreen. This is a documented convenience shortcut, not an administrator password or security boundary. After leaving fullscreen you can minimize or close the app normally. Closing the app ends the current practice session.
 
-If the UI stops responding, the operating system's Task Manager or Force Quit remains available. Restarting the app restores full-screen mode. Windows uses a process-lifetime low-level keyboard hook; it only filters shortcuts while kiosk mode is enabled and this process owns the foreground window. It does not record or send keystrokes. No registry changes, process termination, or persistent machine policies are installed.
+If the UI stops responding, the operating system's Task Manager or Force Quit remains available. Restarting the app restores full-screen mode. Windows uses a process-lifetime low-level keyboard hook; it filters shortcuts for the entire enabled kiosk session, including when another window temporarily owns keyboard focus. Both press and release events are consumed, so the Windows shell should not receive the shortcut that opens Start or the Alt+Tab overlay. It does not record or send keystrokes. No registry changes, process termination, or persistent machine policies are installed.
 
 `npm run dev` stays a normal browser page. `npm run tauri:dev` and native builds use the full-screen window settings. Configuration lives in `src-tauri/tauri.conf.json`; the close guard and mode command live in `src-tauri/src/lib.rs`; the keyboard listener lives in `src/components/DesktopKiosk.tsx`.
 
@@ -14,7 +14,7 @@ If the UI stops responding, the operating system's Task Manager or Force Quit re
 
 Native shortcut controls live in `src-tauri/src/kiosk_shortcuts.rs`:
 
-- Windows filters Alt+Tab (including Alt+Shift+Tab), Alt+Esc, Alt+F4, Alt+Space, Alt+F6, Ctrl+Esc, and both Windows keys before the switcher receives them. Ctrl+Shift+Esc and Ctrl+Alt+Delete remain available for recovery. The hook runs on a dedicated message-loop thread. Leaving kiosk mode disables filtering immediately; closing the process removes the hook.
+- Windows filters Alt+Tab (including Alt+Shift+Tab), Alt+Esc, Alt+F4, Alt+Space, Alt+F6, Ctrl+Esc, and both Windows keys before the switcher receives them. Ctrl+Shift+Esc and Ctrl+Alt+Delete remain available for recovery. The hook runs on a dedicated message-loop thread. Leaving kiosk mode restores shortcuts immediately (a release matching an already suppressed press is still consumed); closing the process removes the hook.
 - macOS uses AppKit presentation options to hide the Dock/menu bar, disable the Command+Tab process-switching interface, and disable application hiding. Original presentation options are restored when leaving kiosk mode. Force Quit is left available. Presentation flags are reapplied after window focus/fullscreen size changes.
 - Browser mode has no OS shortcut filtering. Linux has fullscreen presentation only.
 
@@ -23,3 +23,15 @@ These controls are not a complete secure exam browser. Trackpad gestures, Missio
 For institution-owned Windows devices, OS lockdown requires a separate administrator-managed configuration. Microsoft Shell Launcher can replace Explorer for a dedicated kiosk account, but alone does not block other applications; additional policy is needed. It is supported by specified Enterprise, Education, and IoT Enterprise editions. See [Microsoft Shell Launcher](https://learn.microsoft.com/en-us/windows/configuration/shell-launcher/). A macOS deployment likewise needs a separately chosen and tested managed-device/exam solution. This repository does not apply those policies.
 
 GitHub Actions Native checks passed `cargo check --locked` on Windows and macOS for commit `99de4b3`. Installer packaging and live window behavior remain unverified. Before distribution, build on both Windows and macOS and verify shortcut suppression, fullscreen transitions, closing, taskbar/Dock behavior, and multiple monitors. Specifically verify that Ctrl+Alt+Shift+K restores normal switching, and that switching remains normal after closing the app. macOS trackpad/Mission Control restrictions remain an explicit limitation, not a passed check.
+
+## Windows overlay regression check
+
+Build a new Windows installer from the latest main commit; an already installed executable does not update when GitHub source changes. On Windows 10/11, test on the start-code screen and during a module:
+
+1. Press and hold Alt+Tab, then Alt+Shift+Tab and Ctrl+Alt+Tab. No switcher thumbnails should appear, even briefly. Repeat after clicking into a text field and after returning from a system dialog.
+2. Tap, hold, and release each Windows key. Try Win+Tab, Win+D, Win+S, and Ctrl+Esc. Neither Start nor Task View/search should appear from these shortcuts.
+3. Release Alt before releasing Tab, then use ordinary Tab/Shift+Tab navigation and typing. Normal navigation must still work.
+4. Exit kiosk mode with Ctrl+Alt+Shift+K while the app is focused. Verify Alt+Tab and both Windows keys work normally. Re-enter kiosk mode and repeat steps 1–2.
+5. Verify Ctrl+Shift+Esc remains available and normal shortcuts work after the app closes.
+
+The shortcut event-sequence tests in Native checks cover suppression, matching releases, held-key repeats, normal navigation, recovery combinations, and disabled mode. They do not simulate or certify Windows shell rendering; the live checks above remain required.

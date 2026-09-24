@@ -22,6 +22,11 @@ jobs:
           node-version: "22"
           cache: npm
       - uses: dtolnay/rust-toolchain@stable
+      - name: Test Windows shortcut event sequences
+        shell: bash
+        run: |
+          rustc --edition 2021 --test src-tauri/src/windows_shortcut_filter.rs -o shortcut-filter-tests
+          ./shortcut-filter-tests
       - run: npm ci
       - run: npm run build
       - run: cargo check --locked --manifest-path src-tauri/Cargo.toml

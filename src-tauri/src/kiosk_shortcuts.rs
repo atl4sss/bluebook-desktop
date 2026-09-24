@@ -1,33 +1,42 @@
 // Native presentation controls. No input is recorded or transmitted.
-// Windows filtering applies only while this process owns the foreground window.
+// Windows filtering lasts for the kiosk session, including focus transitions.
+#[cfg(target_os = "windows")]
+#[path = "windows_shortcut_filter.rs"]
+mod windows_shortcut_filter;
+
 #[cfg(target_os = "windows")]
 mod platform {
+    use super::windows_shortcut_filter::ShortcutFilter;
+    use std::cell::RefCell;
     use std::sync::{atomic::{AtomicBool, Ordering}, mpsc, OnceLock};
     use windows_sys::Win32::{
         Foundation::{LPARAM, LRESULT, WPARAM},
-        System::{LibraryLoader::GetModuleHandleW, Threading::GetCurrentProcessId},
+        System::LibraryLoader::GetModuleHandleW,
         UI::{Input::KeyboardAndMouse::GetAsyncKeyState, WindowsAndMessaging::*},
     };
 
     static ENABLED: AtomicBool = AtomicBool::new(false);
     static HOOK: OnceLock<Result<(), String>> = OnceLock::new();
 
+    thread_local! {
+        static FILTER: RefCell<ShortcutFilter> = RefCell::new(ShortcutFilter::new());
+    }
+
     unsafe extern "system" fn keyboard_hook(code: i32, wparam: WPARAM, lparam: LPARAM) -> LRESULT {
-        if code >= 0 && ENABLED.load(Ordering::Relaxed) {
-            let mut foreground_pid = 0;
-            GetWindowThreadProcessId(GetForegroundWindow(), &mut foreground_pid);
-            if foreground_pid == GetCurrentProcessId() {
-                let key = &*(lparam as *const KBDLLHOOKSTRUCT);
-                let alt = key.flags & LLKHF_ALTDOWN != 0;
-                let ctrl = GetAsyncKeyState(0x11) < 0;
-                let shift = GetAsyncKeyState(0x10) < 0;
-                // Win, Alt+Tab/Esc/F4/Space/F6, Ctrl+Esc. Keep Ctrl+Shift+Esc
-                // and Ctrl+Alt+Shift+K available for recovery.
-                let blocked = matches!(key.vkCode, 0x5B | 0x5C)
-                    || (alt && matches!(key.vkCode, 0x09 | 0x1B | 0x73 | 0x20 | 0x75))
-                    || (ctrl && !shift && key.vkCode == 0x1B);
-                if blocked { return 1; }
-            }
+        if code == HC_ACTION as i32 {
+            let key = &*(lparam as *const KBDLLHOOKSTRUCT);
+            // Do not gate this on foreground PID: the app can remain visible
+            // (always-on-top) while another window owns keyboard focus. Letting
+            // that event through allows Explorer to draw Start/the switcher.
+            let blocked = FILTER.with(|filter| filter.borrow_mut().should_block(
+                ENABLED.load(Ordering::Relaxed),
+                key.vkCode,
+                key.flags & LLKHF_UP != 0,
+                key.flags & LLKHF_ALTDOWN != 0,
+                GetAsyncKeyState(0x11) < 0,
+                GetAsyncKeyState(0x10) < 0,
+            ));
+            if blocked { return 1; }
         }
         CallNextHookEx(std::ptr::null_mut(), code, wparam, lparam)
     }

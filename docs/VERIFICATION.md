@@ -1,3 +1,9 @@
+# Windows overlay suppression update
+
+Removed the foreground-process condition from the Windows low-level keyboard hook. Filtering now follows the enabled kiosk session, so a focus change cannot exempt Alt+Tab or Windows keys. Matching releases remain suppressed after modifier release or mode changes. Added event-sequence regression tests to Native checks.
+
+This workspace has no Rust compiler or interactive Windows desktop. Native compilation and event tests run in GitHub Actions; actual absence of Start/Alt+Tab overlays must be checked using `docs/KIOSK.md` on a fresh Windows build.
+
 # Verification
 
 ## Readiness, instructions, and native shortcut update
