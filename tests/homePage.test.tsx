@@ -1,4 +1,5 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { beforeEach, expect, it, vi } from "vitest";
 import HomePage from "../src/pages/HomePage";
@@ -32,6 +33,27 @@ function change(label: string, value: string) {
 beforeEach(() => {
   localStorage.clear();
   vi.clearAllMocks();
+});
+
+it("accepts keyboard typing, spaces, editing and paste in the details form", async () => {
+  setup();
+  const user = userEvent.setup();
+  await user.click(screen.getByRole("button", { name: "Edit test details" }));
+  const name = screen.getByLabelText("Student full name");
+  expect(name).toHaveFocus();
+  await user.type(name, "Alex Student");
+  const school = screen.getByLabelText("School / test center");
+  await user.clear(school);
+  await user.type(school, "Школа 12{Backspace}3");
+  const address = screen.getByLabelText("Address");
+  await user.clear(address);
+  await user.paste("100 Main Street\nAlmaty");
+  await user.click(screen.getByRole("button", { name: "Save changes" }));
+  expect(screen.getByRole("article")).toHaveTextContent("Школа 13");
+  expect(screen.getByRole("article")).toHaveTextContent(
+    "100 Main Street Almaty",
+  );
+  expect(screen.getByRole("heading", { name: /Welcome, Alex/ })).toBeVisible();
 });
 
 it("persists edited profile, optional times, card content and information dialogs", () => {

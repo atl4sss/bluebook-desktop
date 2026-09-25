@@ -3,11 +3,11 @@
   background: #fafafa;
   color: #242424;
   font-family: var(--font-ui);
-  font-size: 18px;
+  font-size: 16px;
   line-height: 1.45;
 }
 .home-container {
-  width: min(1120px, calc(100% - 80px));
+  width: min(1040px, calc(100% - 80px));
   margin: 0 auto;
 }
 .home-hero {
@@ -18,14 +18,14 @@
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  padding: 26px 0 36px;
+  padding: 22px 0 26px;
 }
 .home-brand {
   display: flex;
   align-items: center;
   gap: 9px;
   color: #354bcb;
-  font-size: 26px;
+  font-size: 23px;
   font-weight: 700;
 }
 .home-brand img {
@@ -47,15 +47,15 @@
   color: white;
 }
 .home-hero h1 {
-  font-size: clamp(28px, 3.4vw, 46px);
+  font-size: clamp(26px, 3vw, 40px);
   font-weight: 400;
   color: #354bcb;
   line-height: 1.2;
-  padding: 15px 0 32px;
+  padding: 12px 0 26px;
   margin: 0;
 }
 .home-content {
-  padding-top: 32px;
+  padding-top: 26px;
   padding-bottom: 48px;
 }
 .home-section-heading {
@@ -66,7 +66,7 @@
   margin-bottom: 20px;
 }
 .home-section-heading h2 {
-  font-size: 34px;
+  font-size: 30px;
   font-weight: 700;
   margin: 0;
   line-height: 1.2;
@@ -116,8 +116,8 @@
   background: white;
   border-radius: 22px;
   box-shadow: 0 3px 15px #0000000d;
-  width: min(100%, 670px);
-  padding: 28px 30px 24px;
+  width: min(100%, 600px);
+  padding: 24px 26px 20px;
 }
 .home-card-heading {
   display: flex;
@@ -127,7 +127,7 @@
   margin-bottom: 24px;
 }
 .home-card-heading h3 {
-  font-size: 26px;
+  font-size: 23px;
   font-weight: 700;
   overflow-wrap: anywhere;
 }
@@ -163,7 +163,7 @@
   margin-top: 3px;
 }
 .home-location {
-  margin-top: 28px;
+  margin-top: 22px;
 }
 .home-multiline {
   white-space: pre-wrap;
@@ -174,7 +174,7 @@
   max-width: 520px;
 }
 .home-card-footer {
-  margin-top: 30px;
+  margin-top: 24px;
   border-top: 1px solid #d4d4d4;
   padding-top: 22px;
   display: flex;
@@ -212,16 +212,16 @@
   overflow-wrap: anywhere;
 }
 .home-practice {
-  margin-top: 42px;
+  margin-top: 32px;
 }
 .home-practice-grid {
   display: flex;
   gap: 24px;
 }
 .home-practice-card {
-  width: 245px;
-  min-height: 200px;
-  padding: 26px;
+  width: 215px;
+  min-height: 170px;
+  padding: 22px;
   background: white;
   border-radius: 21px;
   box-shadow: 0 3px 15px #0000000d;

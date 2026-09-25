@@ -143,7 +143,7 @@ export default function HomePage() {
         <div className="home-container">
           <div className="home-topbar">
             <div className="home-brand">
-              <img src="/app-icon.svg" alt="" />
+              <img src="/app-icon.png" alt="" />
               {desktopConfig.productName}
             </div>
             <button

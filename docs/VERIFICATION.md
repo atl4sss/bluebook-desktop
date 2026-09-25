@@ -1,3 +1,11 @@
+# Branding, home density, and form focus update
+
+- Product/window/page name: `Bluebook.`; supplied PNG is the source for the header, favicon, and generated Windows/macOS icons.
+- Home typography and spacing are approximately 12% smaller. Test-module layouts and timers are unchanged.
+- Dialogs explicitly activate the Tauri window and embedded WebView, then focus an editable control. Clicking a field recovers focus if the document is inactive. This addresses a potential focus-loss cause; the reported Windows typing issue still needs verification on the affected machine.
+- System-shortcut suppression remains enabled. Ordinary text entry is not filtered.
+- `npm test`: 36 tests passed, including keyboard typing, Cyrillic, spaces, Backspace, paste, and native window/WebView focus ordering. `npm run build` and `npm run lint` passed.
+
 # Your Tests home page update
 
 - Added an editable dashboard at `/`, moved Start Code to `/start-code`, and connected Return home.

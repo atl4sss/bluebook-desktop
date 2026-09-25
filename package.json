@@ -14,7 +14,7 @@
     "tauri:build": "tauri build",
     "test": "vitest run",
     "test:watch": "vitest",
-    "icons": "tauri icon public/app-icon.svg",
+    "icons": "tauri icon public/app-icon.png",
     "format": "prettier --write src tests docs README.md"
   },
   "dependencies": {

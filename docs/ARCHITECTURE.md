@@ -10,7 +10,7 @@ The route gate is user-flow state, not an authorization boundary. Firestore Secu
 
 `HomePage.tsx` provides the welcome header, Your Tests card, independent Active/Past filters, and Practice and Prepare tiles. The profile button and card’s ••• button open the editor. `testCardSettings.ts` loads validated field types from `sat-practice-test-card-v1`; the student name shares `sat-practice-name` with the start-code Help dialog. Saving settings only writes local storage. Displayed test name, schedule, location, accommodations, status, check-in label, overview, checklist, and optional score-sends information are editable. This metadata does not change the SAT question bank, durations, or send scores.
 
-The check-in and full-length practice buttons navigate to `/start-code` without creating a session or transmitting a code. Return home clears the code screen’s transient readiness state. Past tabs show an honest empty state because completed-session history is not persisted. The header uses the desktop product name from `tauri.conf.json` and the existing `public/app-icon.svg` asset.
+The check-in and full-length practice buttons navigate to `/start-code` without creating a session or transmitting a code. Return home clears the code screen’s transient readiness state. Past tabs show an honest empty state because completed-session history is not persisted. The header uses the desktop product name from `tauri.conf.json` and the existing `public/app-icon.png` asset.
 
 ## Firebase and startup
 

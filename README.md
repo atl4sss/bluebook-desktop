@@ -170,7 +170,7 @@ The calculator is a basic offline calculator with arithmetic, square, and square
 
 - App name/title/identifier: `src-tauri/tauri.conf.json`; browser title: `index.html`.
 - Version: change `package.json` and the matching Cargo package version in `src-tauri/Cargo.toml`. Tauri reads the displayed/bundled version from `package.json`.
-- Icon source: `public/app-icon.svg`; regenerate with `npm run icons`. The source is a neutral book icon, not the College Board logo. Replace it with your own asset if desired.
+- Icon source: `public/app-icon.png`; regenerate with `npm run icons`. The source is a neutral book icon, not the College Board logo. Replace it with your own asset if desired.
 - Window: default 1366×768, minimum 1024×640, normal resizable system window.
 - Capabilities: `src-tauri/capabilities/main.json`; no filesystem, shell, or remote webpage permissions. The only application command is read-only `app_info`.
 - Content policy: `app.security` in `tauri.conf.json`. Do not disable it to fix a blocked resource; permit only the specific endpoint the feature needs.
@@ -209,4 +209,4 @@ The app opens on **Your Tests**. Click **•••** on the test card (or your p
 
 **Check In Now / Start Exam Setup** opens Start Code. No code is sent until **Help → ••• → I’m ready**. Return to Home now returns to Your Tests; the existing Clear code action remains available.
 
-To change installed-app branding, set `productName` and the main window `title` in `src-tauri/tauri.conf.json`, update the page title in `index.html`, replace `public/app-icon.svg`, and run `npm run icons` before rebuilding. The home-page brand follows the desktop product name. Keep the bundle identifier stable to preserve the installed app’s identity and local settings.
+To change installed-app branding, set `productName` and the main window `title` in `src-tauri/tauri.conf.json`, update the page title in `index.html`, replace `public/app-icon.png`, and run `npm run icons` before rebuilding. The home-page brand follows the desktop product name. Keep the bundle identifier stable to preserve the installed app’s identity and local settings.
