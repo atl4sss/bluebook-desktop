@@ -235,3 +235,11 @@ The app opens on **Your Tests**. Click **•••** on the test card (or your p
 **Check In Now / Start Exam Setup** opens Start Code. No code is sent until **Help → ••• → I’m ready**. Return to Home now returns to Your Tests; the existing Clear code action remains available.
 
 To change installed-app branding, set `productName` and the main window `title` in `src-tauri/tauri.conf.json`, update the page title in `index.html`, replace `public/app-icon.png`, and run `npm run icons` before rebuilding. The home-page brand follows the desktop product name. Keep the bundle identifier stable to preserve the installed app’s identity and local settings.
+
+## Personal installer links
+
+A no-card Supabase Free option for issuing one-use installer download links is
+provided in [docs/SUPABASE_ONE_USE_DOWNLOAD.md](docs/SUPABASE_ONE_USE_DOWNLOAD.md).
+It requires a Supabase project and an uploaded installer before a live link can be
+issued. This does not turn an installed app into a one-use license; code entry
+still requires organizer approval in Firebase as described above.
