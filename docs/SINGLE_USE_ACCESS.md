@@ -1,7 +1,9 @@
 # One-test distribution: implementation requirements
 
-Status: design only. The current executable is still reusable. No activation,
-license enforcement, private download endpoint, or deployed service exists yet.
+Status: the private one-use download service is implemented in
+`functions/distribution` but is not deployed. See DOWNLOAD_DEPLOYMENT.md for setup
+and test limits. The executable is still reusable: device activation and one-test
+license enforcement are not implemented.
 
 ## Confirmed behavior
 
