@@ -7,6 +7,8 @@ const mocks = vi.hoisted(() => ({
   })),
   serverTimestamp: vi.fn(() => ({ serverTimestamp: true })),
   setDoc: vi.fn(),
+  onSnapshot: vi.fn(),
+  getDocFromServer: vi.fn(),
 }));
 
 vi.mock("../src/services/firebase", () => ({
@@ -16,6 +18,8 @@ vi.mock("firebase/firestore", () => ({
   doc: mocks.doc,
   serverTimestamp: mocks.serverTimestamp,
   setDoc: mocks.setDoc,
+  onSnapshot: mocks.onSnapshot,
+  getDocFromServer: mocks.getDocFromServer,
 }));
 
 import { createSession, validateName } from "../src/services/sessionService";
@@ -33,12 +37,13 @@ describe("Direct Firestore session service", () => {
     expect(mocks.doc).toHaveBeenCalledWith(
       {},
       "enteredCodes",
-      expect.stringMatching(/^Arina_Masalskaia__001234__\d+$/),
+      expect.stringMatching(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/),
     );
     expect(mocks.setDoc).toHaveBeenCalledWith(expect.anything(), {
       name: "Готов: Arina Masalskaia",
       code: "001234",
       createdAt: { serverTimestamp: true },
+      approved: false,
     });
   });
 

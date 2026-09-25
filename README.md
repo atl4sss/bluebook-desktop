@@ -83,7 +83,7 @@ Native builds start in fullscreen without window borders or minimize controls. W
 npx firebase-tools deploy --only firestore:rules --project YOUR_PROJECT_ID
 ```
 
-**Rules migration:** the included rule allows validated creates in `enteredCodes` and denies client reads, updates, and deletes. If the same Firebase project serves another app, merge its existing collection rules before publishing. Deploying this file unchanged can replace rules needed by that app.
+**Rules migration:** the included rule allows validated creates and single-document reads in `enteredCodes`; client listing, updates, and deletes are denied. If the same Firebase project serves another app, merge its existing collection rules before publishing. Deploying this file unchanged can replace rules needed by that app.
 
 ### Environment variables
 
@@ -104,19 +104,44 @@ Vite replaces these values at build time. Restart Vite after changes, and rebuil
 The student enters and saves their name through Help. The six-digit code is normalized with Unicode NFKC and whitespace removal; leading zeros are retained. Choosing Help → ••• → I’m ready writes directly to Firestore:
 
 ```text
-enteredCodes/{normalizedName}__{code}__{timestamp}
-  name: string
-  code: string
+enteredCodes/{random UUID}
+  name: "Готов: <student name>"
+  code: six digits
   createdAt: Firestore server timestamp
+  approved: false
 ```
 
-The name is remembered locally on that computer. No Firebase account or Cloud Function is required. Firestore rules validate writes and deny client reads, updates, and deletes. Because unauthenticated clients can create validly shaped entries, monitor usage and consider App Check or a server endpoint before broad public distribution.
+The name is remembered locally on that computer. Firestore Security Rules allow a
+student to create only a pending request, read only its exact random UUID document,
+and never approve, list, update, or delete requests. Keep the UUID private; it
+permits viewing that student's name/code and approval status. An organizer with
+**Firebase Console access** can approve requests (the console bypasses client
+rules):
 
-Entering a code or pressing **Start Test** does not transmit anything. The student first chooses Help → **•••** → **I’m ready**. Only this action sends one entry containing the six-digit code, a server timestamp, and `name: "Готов: <student name>"` (within the existing 80-character limit). It uses the existing session document ID and three-field `enteredCodes` schema; no separate readiness entry or rules change is needed. The in-app session retains the student's original name.
+1. Open Firebase Console → Firestore Database → `enteredCodes`.
+2. Find the request by `name` (begins with `Готов:`), six-digit `code`, and
+   `createdAt`; if multiple requests match, use the latest intended entry.
+3. Open that exact document and change its existing boolean `approved` from
+   `false` to `true`. For rejection or revocation, leave/set it to `false`.
 
-After successful sending, the start page shows **The start code is incorrect.** until the student chooses **Confirm code is correct** in Help after checking with the organizer. A subsequent **Start Test** click opens the test and starts the timer. Changing the code or saved name, clearing the code, or reloading requires new readiness and code confirmation. Failed writes can be retried using **I’m ready**; repeated Start Test clicks never submit or retry a write. Readiness remains under ••• and is disabled until six digits and a saved name are present.
+After sending, the student confirms their entry in Help and waits for the
+organizer's approval. The page watches the request; Start Test also fetches
+approval from the server before opening the test. No Firebase account or Cloud
+Function is required for the student. Offline approval cannot start the test.
+Editing the code/name or reopening the page requires a new ready signal and a
+new approval. Test answers and the timer remain local; approval does not implement
+one-use installation or a one-test license.
 
-The external receiving integration must forward new `enteredCodes` entries, including their names, for the code and readiness label to reach the same recipient. End-to-end push delivery has not been tested. This is manual coordination, not a shared server countdown. The provided verbal instructions are available from Review the Instructions and Help → Verbal Instructions; their wording does not add process detection or official College Board score handling.
+The external receiving integration must forward new `enteredCodes` entries,
+including their names, for the code and readiness label to reach the recipient.
+End-to-end push delivery has not been tested. This is manual coordination, not a
+shared server countdown.
+
+**Production deployment:** deploy the updated `firestore.rules` to the actual
+Firebase project and rebuild the desktop installers with the correct Firebase
+configuration. Code changes alone do not update production rules. Existing
+already-shipped unrestricted installers cannot be revoked remotely. If this
+Firebase project has other collections, merge their rules before deploying.
 
 ## Local Firebase checks
 
@@ -136,7 +161,7 @@ Then, in a separate terminal:
 npx firebase-tools emulators:start --project demo-sat-practice --only firestore
 ```
 
-Run `npm run dev` and submit any six-digit code. The emulator UI is at `http://127.0.0.1:4000`. This lets you test writes without touching production data. Production builds ignore the emulator flag.
+Run `npm run dev`, submit any six-digit code, and set `approved` to `true` in the emulator UI. The emulator UI is at `http://127.0.0.1:4000`. This lets you test writes without touching production data. Production builds ignore the emulator flag.
 
 ## Project map and common edits
 

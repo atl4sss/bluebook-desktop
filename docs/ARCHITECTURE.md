@@ -16,13 +16,16 @@ The check-in and full-length practice buttons navigate to `/start-code` without 
 
 `services/firebase.ts` lazily initializes Firebase and Cloud Firestore. Configuration errors stay recoverable on the form. It connects to the local Firestore emulator only when Vite is in development mode and the emulator flag is set.
 
-`sessionService.ts` normalizes and validates the student's name and six-digit code, then creates an `enteredCodes` document directly with `serverTimestamp()` only after the student chooses I’m ready. The single entry includes a readiness prefix in the name; the returned in-app session keeps the original name. The document ID follows `normalized_name__code__local_timestamp`, matching the existing website's collection. It allows one in-flight request and reuses the document ID on retry. The Help dialog stores the name locally for later starts.
-
-No Firebase Authentication or Cloud Function is used. Rules allow only strictly shaped creates in `enteredCodes`; clients cannot list, read, update, or delete these records. Because creation is public, the collection should be monitored for abuse before broad distribution.
-
-This is code registration, not an allowlist-based access-control system. All valid six-digit codes are accepted. No exam answers are transmitted.
-
-`StartCodePage` keeps unsent digits local. Start Test never performs a write. Help → ••• → I’m ready invokes `createSession` and then retains the submitted code, returned session, and a confirmation flag locally. `ReadySignal` is controlled by the parent so closing/reopening Help cannot reset a pending or successful submission. A successful write leaves the session provider empty and displays the requested incorrect-code message. Help can confirm a successfully submitted code; confirmation itself does not navigate. A subsequent Start Test click activates the session and opens `/test`, where the timer is initialized. Editing the code, changing the saved name, or clearing the code discards registration and confirmation. Name/code edits are disabled during the write. Confirmation does not persist across reloads, and no server-synchronized start time is implemented.
+`sessionService.ts` registers readiness in `enteredCodes/{random UUID}` with
+`approved: false` and a server timestamp. Only after readiness does the student
+read that specific document's approval status. The organizer changes `approved` in
+Firestore Console; the client cannot update it. `StartCodePage` retains the
+student's local confirmation in Help, subscribes to approval changes, and checks
+the server again on Start Test. On stale or offline approval, the test stays locked.
+The timer begins only when the test opens. Editing the code/name or reloading
+requires new readiness. This is organizer-gated entry, not a license or a
+server-synchronized test session. The current question content and answers remain
+local and unrestricted builds issued earlier continue to work.
 
 ## SAT state and components
 

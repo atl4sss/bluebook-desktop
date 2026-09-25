@@ -1,5 +1,6 @@
 import userEvent from "@testing-library/user-event";
 import {
+  act,
   fireEvent,
   render,
   screen,
@@ -13,13 +14,18 @@ import SessionProvider from "../src/app/SessionProvider";
 import { verbalInstructions } from "../src/data/verbalInstructions";
 import {
   createSession,
+  checkApproval,
+  watchApproval,
   validateAccessCode,
   type Session,
 } from "../src/services/sessionService";
 vi.mock("../src/services/sessionService", async (importOriginal) => ({
   ...(await importOriginal<typeof import("../src/services/sessionService")>()),
   createSession: vi.fn(),
+  checkApproval: vi.fn(),
+  watchApproval: vi.fn(),
 }));
+let approvalListener: ((approved: boolean) => void) | undefined;
 function setup(name = "Student") {
   if (name) localStorage.setItem("sat-practice-name", name);
   return render(
@@ -66,8 +72,18 @@ function confirm() {
     screen.getByRole("button", { name: "Confirm code is correct" }),
   );
 }
+function approve() {
+  act(() => approvalListener?.(true));
+}
 beforeEach(() => {
   vi.resetAllMocks();
+  approvalListener = undefined;
+  vi.mocked(watchApproval).mockImplementation((_session, callback) => {
+    approvalListener = callback;
+    callback(false);
+    return () => { approvalListener = undefined; };
+  });
+  vi.mocked(checkApproval).mockResolvedValue(true);
   localStorage.clear();
   vi.mocked(createSession).mockResolvedValue({
     sessionId: "entry",
@@ -99,8 +115,23 @@ it("never sends a code before readiness, including repeated Start Test clicks", 
   confirm();
   expect(screen.queryByText("Test loaded")).not.toBeInTheDocument();
   start();
+  expect(screen.queryByText("Test loaded")).not.toBeInTheDocument();
+  approve();
+  start();
   expect(await screen.findByText("Test loaded")).toBeVisible();
   expect(createSession).toHaveBeenCalledTimes(1);
+});
+
+it("rejects a stale or revoked approval on the server at test start", async () => {
+  setup();
+  await send();
+  confirm();
+  approve();
+  vi.mocked(checkApproval).mockResolvedValueOnce(false);
+  start();
+  expect(await screen.findByRole("alert")).toHaveTextContent("Waiting for the test organizer");
+  expect(screen.queryByText("Test loaded")).not.toBeInTheDocument();
+  expect(checkApproval).toHaveBeenCalledTimes(1);
 });
 
 it("locks edits during readiness submission and prevents duplicate sends across Help reopening", async () => {
@@ -156,6 +187,7 @@ it("requires explicit readiness retry after a failed write", async () => {
   await screen.findByRole("status");
   close();
   confirm();
+  approve();
   start();
   await screen.findByText("Test loaded");
   expect(createSession).toHaveBeenCalledTimes(2);
@@ -174,6 +206,7 @@ it("requires new readiness when the code changes", async () => {
   close();
   expect(createSession).toHaveBeenNthCalledWith(2, "654321", "Student");
   confirm();
+  approve();
   start();
   await screen.findByText("Test loaded");
 });

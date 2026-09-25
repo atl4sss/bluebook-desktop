@@ -9,10 +9,12 @@ import { useNavigate } from "react-router-dom";
 import { ClipboardList, HelpCircle, Home } from "lucide-react";
 import {
   createSession,
+  checkApproval,
   normalizeAccessCode,
   normalizeName,
   sessionErrorMessage,
   validateName,
+  watchApproval,
   type Session,
 } from "../services/sessionService";
 import { useSession } from "../app/sessionContext";
@@ -35,6 +37,8 @@ export default function StartCodePage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [readyError, setReadyError] = useState("");
+  const [organizerApproved, setOrganizerApproved] = useState(false);
+  const [approvalError, setApprovalError] = useState("");
   const [registration, setRegistration] = useState<{
     code: string;
     session: Session;
@@ -47,9 +51,26 @@ export default function StartCodePage() {
   const submitting = useRef(false);
   const { startSession, endSession } = useSession();
   const navigate = useNavigate();
+  const registeredSession = registration?.session;
   useEffect(() => {
     cells.current[0]?.focus();
   }, []);
+  useEffect(() => {
+    if (!registeredSession) return;
+    setOrganizerApproved(false);
+    return watchApproval(
+      registeredSession,
+      (approved) => {
+        setOrganizerApproved(approved);
+        setApprovalError("");
+        if (approved) setError("");
+      },
+      () => {
+        setOrganizerApproved(false);
+        setApprovalError("Cannot check the organizer’s approval. Check your connection.");
+      },
+    );
+  }, [registeredSession]);
   const complete = digits.every((digit) => /^\d$/.test(digit));
   const awaitingConfirmation = registration !== null && !registration.confirmed;
   const statusError =
@@ -87,7 +108,7 @@ export default function StartCodePage() {
       cells.current[index + 1]?.focus();
     }
   }
-  function submit(event: FormEvent) {
+  async function submit(event: FormEvent) {
     event.preventDefault();
     if (submitting.current) return;
     if (!complete) {
@@ -101,9 +122,25 @@ export default function StartCodePage() {
     }
     if (registration) {
       setError("");
-      if (registration.confirmed) {
+      if (!registration.confirmed || !organizerApproved) {
+        setError("Waiting for the test organizer to approve your code.");
+        return;
+      }
+      submitting.current = true;
+      setLoading(true);
+      try {
+        if (!(await checkApproval(registration.session))) {
+          setOrganizerApproved(false);
+          setError("Waiting for the test organizer to approve your code.");
+          return;
+        }
         startSession(registration.session);
         navigate("/test", { replace: true });
+      } catch {
+        setError("Cannot verify approval. Check your connection and try again.");
+      } finally {
+        submitting.current = false;
+        setLoading(false);
       }
       return;
     }
@@ -122,6 +159,7 @@ export default function StartCodePage() {
     setLoading(true);
     setError("");
     setReadyError("");
+    setApprovalError("");
     try {
       const code = digits.join("");
       const session = await createSession(code, name);
@@ -196,10 +234,14 @@ export default function StartCodePage() {
           <div id="code-status" className="access-status" aria-live="polite">
             {statusError ? (
               <p role="alert">{statusError}</p>
+            ) : approvalError ? (
+              <p role="alert">{approvalError}</p>
             ) : loading ? (
               "Connecting securely…"
+            ) : registration?.confirmed && !organizerApproved ? (
+              "Waiting for the test organizer to approve your code."
             ) : registration?.confirmed ? (
-              "Code confirmed. Press Start Test when you are ready."
+              "Code approved. Press Start Test when instructed."
             ) : null}
           </div>
         </form>
@@ -293,8 +335,8 @@ export default function StartCodePage() {
               </p>
               <div className="access-confirmation">
                 <p>
-                  After checking the code with your test organizer, confirm it
-                  here. Then press Start Test at the agreed time.
+                  Confirm that you entered the code correctly. Your test organizer
+                  must approve it before you can start.
                 </p>
                 {registration && (
                   <p>
@@ -343,10 +385,10 @@ export default function StartCodePage() {
               <p>{verbalInstructions}</p>
               <hr />
               <p>
-                First enter your code, then choose Help → ••• → I’m ready to
-                send it. Confirm the code in Help after checking with your test
-                organizer, then press Start Test at the agreed time. The timer
-                starts only when the test opens.
+                Enter your code, then choose Help → ••• → I’m ready to send it.
+                Confirm your entry in Help and wait for the test organizer’s
+                approval. Press Start Test when instructed. The timer starts
+                only when the test opens.
               </p>
               <p>
                 This practice test has two Reading and Writing modules, a

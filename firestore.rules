@@ -1,18 +1,22 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // The start screen may create a name/code entry without an account.
-    // Entries remain private and cannot be changed or deleted by clients.
+    // Only the creator knows the random UUID. The console/Admin SDK bypasses
+    // these rules and may flip approved; clients cannot approve themselves.
     match /enteredCodes/{entryId} {
       allow create: if
-        request.resource.data.keys().hasOnly(['name', 'code', 'createdAt']) &&
+        entryId.matches('^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$') &&
+        request.resource.data.keys().hasAll(['name', 'code', 'createdAt', 'approved']) &&
+        request.resource.data.keys().hasOnly(['name', 'code', 'createdAt', 'approved']) &&
         request.resource.data.name is string &&
         request.resource.data.name.size() > 0 &&
         request.resource.data.name.size() <= 80 &&
         request.resource.data.code is string &&
         request.resource.data.code.matches('^[0-9]{6}$') &&
-        request.resource.data.createdAt == request.time;
-      allow read, update, delete: if false;
+        request.resource.data.createdAt == request.time &&
+        request.resource.data.approved == false;
+      allow get: if entryId.matches('^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$');
+      allow list, update, delete: if false;
     }
 
     match /{document=**} {

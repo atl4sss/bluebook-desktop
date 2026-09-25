@@ -1,4 +1,10 @@
-import { doc, serverTimestamp, setDoc } from "firebase/firestore";
+import {
+  doc,
+  getDocFromServer,
+  onSnapshot,
+  serverTimestamp,
+  setDoc,
+} from "firebase/firestore";
 import { getFirebase } from "./firebase";
 
 export interface Session {
@@ -29,14 +35,6 @@ export function validateName(raw: string): string {
   return name;
 }
 
-function nameForDocumentId(name: string): string {
-  return name
-    .replace(/\s+/g, "_")
-    .replace(/\//g, "_")
-    .replace(/[^\p{L}\p{N}_.-]/gu, "_")
-    .slice(0, 80);
-}
-
 let pending: Promise<Session> | undefined;
 let request: { code: string; name: string; sessionId: string } | undefined;
 
@@ -51,7 +49,7 @@ export function createSession(
     request = {
       code,
       name,
-      sessionId: `${nameForDocumentId(name)}__${code}__${Date.now()}`,
+      sessionId: crypto.randomUUID(),
     };
   }
   const current = request;
@@ -62,6 +60,7 @@ export function createSession(
       name: `Готов: ${name.slice(0, 73)}`,
       code,
       createdAt: serverTimestamp(),
+      approved: false,
     });
     request = undefined;
     return { sessionId: current.sessionId, name };
@@ -69,6 +68,31 @@ export function createSession(
     pending = undefined;
   });
   return pending;
+}
+
+function entryRef(session: Session) {
+  return doc(getFirebase().firestore, "enteredCodes", session.sessionId);
+}
+
+export function watchApproval(
+  session: Session,
+  onChange: (approved: boolean) => void,
+  onError: () => void,
+): () => void {
+  return onSnapshot(
+    entryRef(session),
+    { includeMetadataChanges: true },
+    (snapshot) => onChange(
+      snapshot.exists() && !snapshot.metadata.fromCache &&
+      snapshot.data().approved === true,
+    ),
+    onError,
+  );
+}
+
+export async function checkApproval(session: Session): Promise<boolean> {
+  const snapshot = await getDocFromServer(entryRef(session));
+  return snapshot.exists() && snapshot.data().approved === true;
 }
 
 export function sessionErrorMessage(error: unknown): string {
