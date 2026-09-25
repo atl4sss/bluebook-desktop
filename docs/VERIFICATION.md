@@ -1,3 +1,11 @@
+# Home reference layout and practice artwork update
+
+- Removed the trailing period from the displayed app, window, and page name: `Bluebook`.
+- Matched the home page container, welcome header, section heading scale, and practice tile proportions to the supplied reference at wide desktop sizes; narrower layouts remain responsive.
+- Replaced the practice tiles’ placeholder line icons with the two supplied PNGs, preserving original files and transparency.
+- The scheduled-test card markup, styling, editing, and check-in behavior are unchanged.
+- Production build, lint, and all five home-page tests passed. Visual comparison in a running desktop app remains a manual check.
+
 # Branding, home density, and form focus update
 
 - Product/window/page name: `Bluebook.`; supplied PNG is the source for the header, favicon, and generated Windows/macOS icons.

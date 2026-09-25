@@ -2,13 +2,10 @@ import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   BookOpen,
-  Calculator,
   Check,
   CircleCheck,
   CirclePlay,
-  ClipboardList,
   Ellipsis,
-  Monitor,
   UserRound,
 } from "lucide-react";
 import Modal from "../components/ui/Modal";
@@ -23,6 +20,8 @@ import {
 } from "../services/testCardSettings";
 import desktopConfig from "../../src-tauri/tauri.conf.json";
 import "../styles/home.css";
+import testPreviewIcon from "../assets/test-preview.png";
+import fullLengthPracticeIcon from "../assets/full-length-practice.png";
 
 type InfoDialog =
   "overview" | "checklist" | "scores" | "missing" | "practice" | "preview";
@@ -288,9 +287,13 @@ export default function HomePage() {
                 aria-label="Test Preview"
                 onClick={() => setInfo("preview")}
               >
-                <span className="home-preview-art">
-                  <ClipboardList size={48} />
-                  <Calculator size={33} />
+                <span className="home-practice-art">
+                  <img
+                    className="home-test-preview-icon"
+                    src={testPreviewIcon}
+                    alt=""
+                    draggable={false}
+                  />
                 </span>
                 <span>
                   Test
@@ -303,7 +306,14 @@ export default function HomePage() {
                 aria-label="Full-Length Practice"
                 onClick={() => navigate("/start-code")}
               >
-                <Monitor size={65} strokeWidth={1.4} />
+                <span className="home-practice-art">
+                  <img
+                    className="home-full-length-icon"
+                    src={fullLengthPracticeIcon}
+                    alt=""
+                    draggable={false}
+                  />
+                </span>
                 <span>
                   Full-Length
                   <br />

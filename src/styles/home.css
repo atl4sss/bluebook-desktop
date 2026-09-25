@@ -7,7 +7,7 @@
   line-height: 1.45;
 }
 .home-container {
-  width: min(1040px, calc(100% - 80px));
+  width: min(1280px, max(1040px, 66.6667vw), calc(100% - 64px));
   margin: 0 auto;
 }
 .home-hero {
@@ -18,7 +18,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  padding: 22px 0 26px;
+  padding: clamp(22px, 1.67vw, 32px) 0 clamp(26px, 2.29vw, 44px);
 }
 .home-brand {
   display: flex;
@@ -47,15 +47,15 @@
   color: white;
 }
 .home-hero h1 {
-  font-size: clamp(26px, 3vw, 40px);
+  font-size: clamp(32px, 2.85vw, 56px);
   font-weight: 400;
   color: #354bcb;
   line-height: 1.2;
-  padding: 12px 0 26px;
+  padding: clamp(12px, 1.04vw, 20px) 0 clamp(26px, 1.98vw, 38px);
   margin: 0;
 }
 .home-content {
-  padding-top: 26px;
+  padding-top: clamp(26px, 2.3vw, 44px);
   padding-bottom: 48px;
 }
 .home-section-heading {
@@ -66,7 +66,7 @@
   margin-bottom: 20px;
 }
 .home-section-heading h2 {
-  font-size: 30px;
+  font-size: clamp(30px, 2.3vw, 44px);
   font-weight: 700;
   margin: 0;
   line-height: 1.2;
@@ -81,8 +81,8 @@
   flex-shrink: 0;
 }
 .home-tabs button {
-  min-width: 85px;
-  min-height: 35px;
+  min-width: clamp(85px, 5.73vw, 110px);
+  min-height: clamp(35px, 2.3vw, 44px);
   padding: 5px 12px;
   display: flex;
   align-items: center;
@@ -212,15 +212,15 @@
   overflow-wrap: anywhere;
 }
 .home-practice {
-  margin-top: 32px;
+  margin-top: clamp(32px, 3.45vw, 66px);
 }
 .home-practice-grid {
   display: flex;
-  gap: 24px;
+  gap: clamp(24px, 1.67vw, 32px);
 }
 .home-practice-card {
-  width: 215px;
-  min-height: 170px;
+  width: clamp(215px, 15.3vw, 294px);
+  min-height: clamp(200px, 13.3vw, 255px);
   padding: 22px;
   background: white;
   border-radius: 21px;
@@ -230,19 +230,31 @@
   justify-content: center;
   flex-direction: column;
   gap: 20px;
-  font-size: 23px;
+  font-size: clamp(23px, 1.46vw, 28px);
   font-weight: 700;
   line-height: 1.15;
 }
-.home-practice-card > svg,
-.home-preview-art {
-  color: #4089a7;
-}
-.home-preview-art {
+/* The supplied PNGs retain their transparent margins; size their canvases
+   separately so the visible illustrations have the same visual weight. */
+.home-practice-art {
+  width: 100%;
+  height: clamp(78px, 5.21vw, 100px);
   display: flex;
-  gap: 4px;
   align-items: center;
-  min-height: 65px;
+  justify-content: center;
+}
+.home-practice-art img {
+  display: block;
+  height: auto;
+  flex-shrink: 0;
+  max-width: 100%;
+  object-fit: contain;
+}
+.home-test-preview-icon {
+  width: clamp(150px, 10vw, 192px);
+}
+.home-full-length-icon {
+  width: clamp(120px, 7.82vw, 150px);
 }
 .home-practice-card:hover {
   box-shadow: 0 4px 18px #0000001c;

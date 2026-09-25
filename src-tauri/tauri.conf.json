@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "Bluebook.",
+  "productName": "Bluebook",
   "version": "../package.json",
   "identifier": "com.atl4sss.satpractice",
   "build": {
@@ -13,7 +13,7 @@
     "windows": [
       {
         "label": "main",
-        "title": "Bluebook.",
+        "title": "Bluebook",
         "width": 1366,
         "height": 768,
         "minWidth": 1024,

@@ -46,7 +46,7 @@ pub fn run() {
         })
         .invoke_handler(tauri::generate_handler![app_info, toggle_kiosk])
         .run(tauri::generate_context!())
-        .expect("Unable to start Bluebook.");
+        .expect("Unable to start Bluebook");
 }
 // A local window mode, not an OS-level security boundary.
 #[tauri::command]
